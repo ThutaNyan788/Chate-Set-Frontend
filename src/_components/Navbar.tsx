@@ -15,7 +15,7 @@ const Navbar = () => {
     document.body.classList.toggle('dark');
   }
   return (
-    <div className='flex justify-between items-center lg:px-20 py-5 border-b-2 border-gray-200 bg-gray-50 dark:bg-gray-950 dark:border-gray-[2px]'>
+    <div className='flex justify-between items-center lg:px-20 py-3 shadow dark:shadow dark:border-b dark:border-b-gray-700 border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-[2px]'>
       <div className='flex items-center space-x-3 text-xl font-semibold'>
         <img src={brandIcon} alt="brand icon" width={50} height={50} />
         <span className=''>Chate Set</span>
@@ -25,6 +25,8 @@ const Navbar = () => {
 
         <Classic toggled={isToggled} toggle={darkModeHandle} className='outline-none text-xl'/>
         <Button onClick={()=>setToggleModal(true)} className='bg-brandColor hover:bg-brandColor dark:text-white'>Login</Button>
+        <Button onClick={()=>setToggleModal(true)} className='bg-transparent text-brandColor border-2 hover:bg-transparent dark:hover:bg-transparent border-brandColor dark:text-white'>Register</Button>
+
       </div>
     </div>
   )

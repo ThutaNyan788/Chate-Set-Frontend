@@ -13,6 +13,10 @@ const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <h1>About</h1>
+            },
+            {
+                path: "/socialite-callback/:userId",
+                element: <h2>hello</h2>
             }
         ]
     },

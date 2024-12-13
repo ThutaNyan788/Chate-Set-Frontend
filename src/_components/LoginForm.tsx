@@ -27,14 +27,8 @@ const LoginForm = () => {
     const handleSocialAuth = (provider: string) => {
         try {
             // TODO:: to add href link to redirect callback
-            if (provider === "github") {
-                window.location.href = "";
-            } else if (provider === "google") {
-                window.location.href = "";
-
-            } else if (provider === "facebook") {
-                window.location.href = "";
-            }
+            window.location.href = `http://127.0.0.1:8000/auth/${provider}/redirect`;
+            
         } catch (error) {
             console.log(error);
 
@@ -63,20 +57,20 @@ const LoginForm = () => {
             <div className="relative w-full h-full flex justify-center items-center ">
                 <div>
                     <div className="flex justify-center items-center w-full h-full">
-                        <div className="relative min-w-96 h-[80vh] bg-white border border-gray-100 shadow-lg p-5 rounded-lg ">
+                        <div className="relative min-w-96 bg-white dark:bg-gray-800 border dark:border-gray-600 border-gray-100 shadow-lg py-5 px-7 rounded-lg ">
 
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className=" justify-self-end">
-                                    <Button onClick={() => setToggleModal(false)} size={"sm"} className="bg-gray-100 shadow-none hover:bg-gray-100">
-                                        <CloseIcon className="text-gray-500" />
+                                    <Button onClick={() => setToggleModal(false)} size={"sm"} className="bg-transparent shadow-none hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <CloseIcon className="text-gray-500 dark:text-white " />
                                     </Button>
                                 </div>
-                                <h1 className="text-2xl font-semibold mb-5 text-center dark:text-black">Welcome Back!</h1>
+                                <h1 className="text-2xl font-semibold mb-5 text-center dark:text-white">Welcome Back!</h1>
 
                                 <div className="mt-10 space-y-8">
                                     <div className="mb-5">
-                                        <div className="mt-1 flex items-center border border-gray-300 rounded-md shadow-sm">
-                                            <div className="px-3 py-2 bg-gray-100 text-gray-500">
+                                        <div className="px-1 mt-1 flex items-center border border-gray-300 rounded-md shadow-sm">
+                                            <div className="px-3 py-2 bg-gray-100 text-gray-500 rounded">
                                                 <UserIcon />
                                             </div>
                                             <input
@@ -94,9 +88,9 @@ const LoginForm = () => {
 
                                     <div className="mb-5">
 
-                                        <div className="mt-1 flex items-center border border-gray-300 rounded-md shadow-sm">
+                                        <div className="px-1 mt-1 flex items-center border border-gray-300 rounded-md shadow-sm">
                                             {/* Lock Icon */}
-                                            <div className="px-3 py-2 bg-gray-100 text-gray-500">
+                                            <div className="px-3 py-2 bg-gray-100 text-gray-500 rounded">
                                                 <PasswordIcon />
                                             </div>
                                             {/* Input Field */}
@@ -138,7 +132,7 @@ const LoginForm = () => {
 
                                 <div className="mb-5 flex items-center justify-center space-x-4">
                                     <div className="flex-grow border-t border-gray-300"></div>
-                                    <span className="text-gray-500 font-medium">Or login with</span>
+                                    <span className="text-gray-500 font-medium">Or Login With</span>
                                     <div className="flex-grow border-t border-gray-300"></div>
                                 </div>
 
