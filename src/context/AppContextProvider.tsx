@@ -6,7 +6,7 @@ import  { createContext, useContext, ReactNode, useState } from 'react';
 const AppContext = createContext<any>(undefined);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [toggleModal,setToggleModal] = useState(false);
+  const [toggleModal,setToggleModal] = useState("");
   return (
     <AppContext.Provider value={{ 
       toggleModal,

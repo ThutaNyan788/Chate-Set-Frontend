@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ArrowRight, Users, BookOpen, Calendar, Bell, MessageSquare, Zap } from 'lucide-react'
+import Stat from '@/_components/Stat'
 
 
 export default function Hero() {
@@ -85,12 +86,4 @@ function FeatureCard({ icon: Icon, title, description }: { icon: React.ElementTy
   )
 }
 
-function Stat({ number, label }: { number: string, label: string }) {
-  return (
-    <div className="flex flex-col items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{number}</span>
-      <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
-    </div>
-  )
-}
 
