@@ -4,10 +4,17 @@ import "@theme-toggles/react/css/Classic.css"
 import { Classic } from "@theme-toggles/react"
 import { useGlobalContext } from '@/context/AppContextProvider'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
-  const {setToggleModal} = useGlobalContext();
+  const { setToggleModal } = useGlobalContext();
+  const navigate = useNavigate();
+
   const [isToggled, setToggle] = useState(false);
+
+  const redirectHome = () => {
+    navigate("/");
+  }
 
 
   const darkModeHandle = ()=>{
@@ -16,10 +23,10 @@ const Navbar = () => {
   }
   return (
     <div className='flex justify-between items-center px-2 lg:px-20 py-3 shadow dark:shadow border-b border-b-gray-00 dark:border-b dark:border-b-gray-700 border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-[2px]'>
-      <div className='flex items-center space-x-3 text-xl font-semibold'>
+      <button onClick={redirectHome} className='flex items-center space-x-3 text-xl font-semibold'>
         <img src={brandIcon} alt="brand icon" width={50} height={50} />
         <span className=''>Chate Set</span>
-      </div>
+      </button>
 
       <div className='flex  items-center space-x-5'>
 
