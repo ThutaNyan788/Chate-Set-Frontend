@@ -7,8 +7,6 @@ import RegisterForm from "./_components/RegisterForm";
 
 export default function App() {
   const {toggleModal} = useGlobalContext();
-  console.log(toggleModal);
-  
   return (
     <>
       <Navbar />

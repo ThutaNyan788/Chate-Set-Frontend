@@ -15,7 +15,7 @@ export default function RegisterForm() {
         <div className='fixed inset-0 bg-gray-50/75 dark:bg-gray-900/75 backdrop-blur-sm z-50 flex items-center justify-center'>
 
             <Card className="w-full max-w-md dark:bg-gray-800">
-                <div className="flex justify-end p-5">
+                <div className="flex justify-end p-5 pb-0">
                     <Button
                         onClick={() => setToggleModal("")}
                         variant="ghost"
@@ -25,7 +25,7 @@ export default function RegisterForm() {
                         <Icons.close className="h-4 w-4" />
                     </Button>
                 </div>
-                <CardHeader className="text-center">
+                <CardHeader className="text-center pt-0">
                     <div className="flex items-center justify-center">
                         <CardTitle className="text-2xl font-semibold">Create an Account</CardTitle>
                     </div>

@@ -1,5 +1,6 @@
 import App from "@/App";
 import Home from "@/pages/Home";
+import Posts from "@/pages/Posts";
 import {
     createBrowserRouter,
     RouterProvider,
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home/>
+            },
+            {
+                path: "/posts",
+                element: <Posts/>
             },
             {
                 path: "/about",

@@ -3,10 +3,17 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight, Users, BookOpen, Calendar, Bell, MessageSquare, Zap } from 'lucide-react'
 import Stat from '@/_components/Stat'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Hero() {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
+  const navigate = useNavigate();
+
+  const redirectPosts = () => {
+  
+    navigate("/posts");
+  }
 
   useEffect(() => setMounted(true), [])
 
@@ -21,7 +28,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <h1 className=" transition-colors text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl xl:text-6xl">
-              Connect, Learn, 
+              <span className=' text-indigo-600 dark:text-indigo-500'>Connect</span>, Learn, 
             </h1>
             <h1 className=" transition-colors text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl xl:text-6xl">
               and Thrive in 
@@ -40,7 +47,7 @@ export default function Hero() {
               placeholder="Enter your email" 
               className="max-w-md px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
-              <button className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 flex items-center">
+              <button onClick={redirectPosts} className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 flex items-center">
               Subscribe Now <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </div>
