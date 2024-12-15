@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./_components/Navbar";
-import LoginForm from "./_components/LoginForm";
-import RegisterForm from "./_components/RegisterForm";
+import Navbar from "./components/layout/Navbar";
+import LoginForm from "./components/auth/LoginForm";
+import RegisterForm from "./components/auth/RegisterForm";
 import { useGlobalContext } from "./context/AppContextProvider";
 import { AnimatePresence } from "framer-motion";
 

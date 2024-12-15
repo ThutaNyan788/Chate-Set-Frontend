@@ -1,16 +1,18 @@
 import { Button } from '@/components/ui/button'
-import brandIcon from '../assets/chate-set.svg'
+import brandIcon from '@/assets/chate-set.svg'
 import "@theme-toggles/react/css/Classic.css"
 import { Classic } from "@theme-toggles/react"
 import { useGlobalContext } from '@/context/AppContextProvider'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useLocalStorage from '@/hooks/useLocalStorage'
+import { useEffect } from 'react'
 
 const Navbar = () => {
   const { setToggleModal } = useGlobalContext();
   const navigate = useNavigate();
 
-  const [isToggled, setToggle] = useState(false);
+  // darkMode 
+  const [isDarkMode, setIsDarkMode] = useLocalStorage('darkMode', false);
 
   const redirectHome = () => {
     navigate("/");
@@ -18,9 +20,19 @@ const Navbar = () => {
 
 
   const darkModeHandle = ()=>{
-    setToggle(!isToggled);
+    setIsDarkMode(!isDarkMode);
     document.body.classList.toggle('dark');
   }
+
+  useEffect(() => { 
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  },[isDarkMode]);
+
+
   return (
     <div className='flex justify-between items-center px-2 lg:px-20 py-3 shadow dark:shadow border-b border-b-gray-00 dark:border-b dark:border-b-gray-700 border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-[2px]'>
       <button onClick={redirectHome} className='flex items-center space-x-3 text-xl font-semibold'>
@@ -30,7 +42,7 @@ const Navbar = () => {
 
       <div className='flex  items-center space-x-5'>
 
-        <Classic toggled={isToggled} toggle={darkModeHandle} className='outline-none text-xl'/>
+        <Classic toggled={isDarkMode} toggle={darkModeHandle} className='outline-none text-xl'/>
         <div className="">
           <Button onClick={() => setToggleModal("login")} className='bg-brandColor hover:bg-indigo-700 dark:text-white active:scale-95 transition-transform me-3'>Login</Button>
             <Button 
