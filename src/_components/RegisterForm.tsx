@@ -6,9 +6,16 @@ import { useGlobalContext } from "@/context/AppContextProvider";
 
 export default function RegisterForm() {
     const { setToggleModal } = useGlobalContext();
+    
     const handleSocialAuth = (provider: string) => {
-        // Implement social auth logic here
-        console.log(`Registering with ${provider}`)
+        try {
+            // TODO:: to add href link to redirect callback
+            window.location.href = `http://127.0.0.1:8000/auth/${provider}/redirect`;
+
+        } catch (error) {
+            console.log(error);
+
+        }
     }
 
     return (

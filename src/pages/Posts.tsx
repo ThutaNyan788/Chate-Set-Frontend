@@ -1,20 +1,13 @@
 import React from 'react';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import Post from '@/components/Post';
-import { PostData,ApiResponse } from '@/models/PostModel';
+import { usePostsData } from '@/hooks/usePostsData';
+
 
 // PostsResponse type based on ApiResponse
-type PostsResponse = ApiResponse<PostData[]>;
+
 
 const Posts: React.FC = () => {
-  const { data: posts, error, isLoading } = useQuery<PostsResponse>({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await axios.get<PostsResponse>('http://127.0.0.1:8000/api/v1/posts/');
-      return response.data;
-    }
-  });
+  const { data: posts, error, isLoading } = usePostsData();
 
 
   if (isLoading) {
@@ -29,7 +22,7 @@ const Posts: React.FC = () => {
     <div>
       <h1>Posts</h1>
       <div>
-        {posts?.data.map((post) => (
+        {posts?.data.map((post:any) => (
             <Post key={post.id} post={post}></Post>
         ))}
       </div>
