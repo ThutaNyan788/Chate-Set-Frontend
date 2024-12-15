@@ -32,8 +32,13 @@ const Navbar = () => {
 
         <Classic toggled={isToggled} toggle={darkModeHandle} className='outline-none text-xl'/>
         <div className="">
-          <Button onClick={()=>setToggleModal("login")} className='bg-brandColor hover:bg-brandColor dark:text-white me-3'>Login</Button>
-          <Button onClick={()=>setToggleModal("register")} className='bg-transparent text-brandColor border-2 hover:bg-transparent dark:hover:bg-transparent border-brandColor dark:text-white'>Register</Button>
+          <Button onClick={() => setToggleModal("login")} className='bg-brandColor hover:bg-indigo-700 dark:text-white active:scale-95 transition-transform me-3'>Login</Button>
+            <Button 
+            onClick={()=>setToggleModal("register")} 
+            className='bg-transparent hover:bg-transparent dark:hover:bg-transparent text-brandColor border-2 border-brandColor dark:text-white active:scale-95 transition-transform'
+            > 
+            Register
+            </Button>
 
         </div>
       </div>
