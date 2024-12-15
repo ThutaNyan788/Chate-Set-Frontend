@@ -17,19 +17,20 @@ const router = createBrowserRouter([
                 element: <Home/>
             },
             {
-                path: "/posts",
-                element: <Posts/>
-            },
-            {
                 path: "/about",
                 element: <h1>About</h1>
             },
             {
                 path: "/socialite-callback/:userId",
                 element: <h2>hello</h2>
-            }
-        ]
+            },
+            {
+                path: "/posts",
+                element: <Posts/>,
+            },
+        ],
     },
+    
 ]);
 
 
