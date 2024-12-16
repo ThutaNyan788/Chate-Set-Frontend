@@ -158,13 +158,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                     </div>
 
                     <div className="mt-6 flex justify-center space-x-4">
-                        <Button onClick={() => handleSocialAuth("github")} variant="outline" className="w-10 h-10 p-0">
+                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("github")} variant="outline" className="w-10 h-10 p-0">
                             <Icons.gitHub className="h-5 w-5" />
                         </Button>
-                        <Button onClick={() => handleSocialAuth("google")} variant="outline" className="w-10 h-10 p-0">
+                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("google")} variant="outline" className="w-10 h-10 p-0">
                             <Icons.google className="h-5 w-5" />
                         </Button>
-                        <Button onClick={() => handleSocialAuth("facebook")} variant="outline" className="w-10 h-10 p-0">
+                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("facebook")} variant="outline" className="w-10 h-10 p-0">
                             <Icons.facebook className="h-5 w-5" />
                         </Button>
                     </div>
