@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { useGlobalContext } from "@/context/AppContextProvider"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from 'react-hook-form'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -50,7 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
     }
 
 
-    const { mutate } = useMutation({
+    const mutation = useMutation({
         mutationFn: (userData: formValues) => {
             return axios.post('/login', userData);
         },
@@ -65,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
 
     const onSubmit = (loginData: formValues) => {
         console.log("Form submitted:", loginData);
-        mutate(loginData);
+        mutation.mutate(loginData);
     };
 
     return (
@@ -140,7 +139,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                         </div>
 
                         <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
-                            {isLoading ? (
+                            {mutation.isPending ? (
                                 <>
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     Signing In...
