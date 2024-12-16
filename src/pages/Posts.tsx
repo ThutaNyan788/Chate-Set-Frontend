@@ -76,7 +76,7 @@ const Posts: React.FC = () => {
   // }
 
   return (
-    <div className="min-h-screen bg-[#0B1221] p-6">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogPosts.map((post, index) => (

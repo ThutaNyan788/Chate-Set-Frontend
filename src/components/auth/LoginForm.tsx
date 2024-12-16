@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useGlobalContext } from "@/context/AppContextProvider"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useForm } from 'react-hook-form'
 import { Button } from "@/components/ui/button"
@@ -13,24 +13,30 @@ interface LoginFormProps {
     setToggleModal: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+type formValues = {
+    user: string,
+    password: string,
+}
+
 const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
-    const [loading, setLoading] = useState(false);
+    const { isLoading,setLoading } = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const userInput = useRef<HTMLInputElement>(null);
+    const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
+        mode : "onBlur"
+    });
 
     // Focus the input when the modal is shown
     useEffect(() => {
         if (toggleModal === "login") {
-            userInput.current?.focus();
+            setFocus("user");
         }
-    }, [toggleModal]); // The effect will run when toggleModal changes
+    }, [toggleModal, setFocus]); // The effect will run when toggleModal changes
 
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
     }
-    const { register, handleSubmit, formState: { errors } } = useForm();
 
 
     const handleSocialAuth = (provider: string) => {
@@ -40,30 +46,27 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
 
         } catch (error) {
             console.log(error);
-
         }
     }
 
 
-    // const createUser =  (data:any)=>{
-    // TODO:: to add api endpoint
-    //    return  axios.post("https://api.chateset.com/v1/auth/register",data);
-    // }
+    
 
-
-    const onSubmit = (userData: any) => {
-        // TODO:: after added api endpoint pls uncomment this code
-        // setLoading(true);
-        // const {data,isLoading} = useQuery({queryKey:["create-user"],queryFn:()=>createUser(userData)});
-        // setLoading(isLoading);
-        //console.log(data);
-    }
+    const onSubmit = async (loginData: formValues) => {
+        console.log("Form submitted:", loginData);
+        try {
+            const res = await axios.post("http://127.0.0.1:8000/api/v1/login", loginData);
+            console.log(res.data);
+        } catch (error) {
+            console.error("Error logging in:", error);
+        }
+    };
 
     return (
         // Overlay
 
         <motion.div
-            className="fixed inset-0 bg-gray-50/75 dark:bg-gray-900/75 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0 p-3 md:p-0 bg-gray-50/75 dark:bg-gray-900/75 backdrop-blur-sm z-50 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -80,7 +83,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                     duration: 0.3,
                 }}
                 className="w-full max-w-md ">
-
                 <div className="p-8 bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-lg rounded-lg">
                     <div className="flex justify-end">
                         <Button
@@ -100,15 +102,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                             <div className="relative">
                                 <Icons.user className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                                 <Input
-                                    {...register("email", { required: true })}
-                                    ref={userInput}
-                                    type="email"
-                                    id="email"
+                                    {...register("user", { required: true })}
+                                    type="text"
+                                    id="user"
                                     placeholder="Username or Email"
                                     className="pl-10"
                                 />
                             </div>
-                            {errors.email && <span className="text-red-500 text-xs mt-1">Email field is required</span>}
+                            {errors.user && <span className="text-red-500 text-xs mt-1">This field is required</span>}
                         </div>
 
                         <div>
@@ -132,8 +133,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                             {errors.password && <span className="text-red-500 text-xs mt-1">Password field is required</span>}
                         </div>
 
-                        <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700" disabled={loading}>
-                            {loading ? (
+                        <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
+                            {isLoading ? (
                                 <>
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     Signing In...
@@ -143,6 +144,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                             )}
                         </Button>
                     </form>
+                    
 
                     <div className="mt-6 flex items-center justify-center space-x-4">
                         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>

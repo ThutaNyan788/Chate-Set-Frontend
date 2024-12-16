@@ -41,14 +41,14 @@ export default function Hero() {
             <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
               Join the ultimate platform that brings your campus to life. Network with peers, access resources, and never miss an event.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="mt-10 flex gap-2 md:gap-4 justify-center lg:justify-start">
               <input 
               type="email" 
               placeholder="Enter your email" 
               className="max-w-md px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
-              <button onClick={redirectPosts} className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 flex items-center">
-              Subscribe Now <ArrowRight className="ml-2 h-5 w-5" />
+              <button onClick={redirectPosts} className="px-4 py-2 md:px-6 md:py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 flex items-center">
+                Subscribe <span className='hidden md:block'>Now</span> <ArrowRight className="hidden md:inline-block ml-2 h-5 w-5" />
               </button>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -62,7 +62,7 @@ export default function Hero() {
             <div className="relative mx-auto w-full max-w-[640px]">
                 <div className="relative">
                 {/* <div className="w-full h-auto bg-cover bg-center" style={{ backgroundImage: "url('/public/img/mockup/2.png')" }}></div> */}
-                <img src="/public/img/mockup.png" alt="" />
+                <img src="/img/mockup.png" alt="" />
                
                 </div>
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500 rounded-full opacity-70 blur-3xl"></div>
