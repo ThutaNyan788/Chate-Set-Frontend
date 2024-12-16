@@ -31,14 +31,14 @@ export function PostCard({
     stats,
 }: PostCardProps) {
     return (
-        <Card className="w-full bg-[#0B1221] text-white border border-gray-700 rounded-lg overflow-hidden">
-            <CardHeader className="space-y-3">
+        <Card className="w-full bg-white shadow dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
+            <CardHeader className="space-y-4">
                 <div className="flex items-center space-x-3">
                     <Avatar className="h-12 w-12">
                         <AvatarImage src={author.avatar} alt={author.name} />
                         <AvatarFallback>{author.name[0]}</AvatarFallback>
                     </Avatar>
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                         <h3 className="font-medium leading-none">{author.name}</h3>
                         <p className="text-sm text-gray-400">
                             {readTime} • {date}
@@ -52,7 +52,7 @@ export function PostCard({
                             <Badge
                                 key={tag}
                                 variant="secondary"
-                                className="bg-[#1A2333] hover:bg-[#1A2333] text-gray-300"
+                                className="bg-gray-900 dark:border-gray-700 hover:bg-[#1A2333] text-gray-300"
                             >
                                 #{tag}
                             </Badge>
@@ -74,30 +74,30 @@ export function PostCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-[#1A2333] border border-gray-600"
+                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
-                        <Heart className="mr-1 md:mr-2 h-4 w-4" />
+                        <Heart className="mr-1 h-4 w-4" />
                         <span className="text-xs md:text-sm">{stats.likes}k</span>
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-[#1A2333] border border-gray-600"
+                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
-                        <MessageCircle className="mr-1 md:mr-2 h-4 w-4" />
+                        <MessageCircle className="mr-1 h-4 w-4" />
                         <span className="text-xs md:text-sm">{stats.comments}</span>
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-[#1A2333] border border-gray-600"
+                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Bookmark className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-[#1A2333] border border-gray-600"
+                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Link2 className="h-4 w-4" />
                     </Button>

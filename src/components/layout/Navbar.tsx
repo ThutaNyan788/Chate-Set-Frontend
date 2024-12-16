@@ -42,7 +42,7 @@ const Navbar = () => {
 
       <div className='flex  items-center space-x-5'>
 
-        <Classic toggled={isDarkMode} toggle={darkModeHandle} className='outline-none text-xl'/>
+        <Classic toggled={isDarkMode} toggle={darkModeHandle} className='outline-none text-xl' placeholder={undefined}/>
         <div className="">
           <Button onClick={() => setToggleModal("login")} className='bg-brandColor hover:bg-indigo-700 dark:text-white active:scale-95 transition-transform me-3'>Login</Button>
             <Button 

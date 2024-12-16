@@ -13,13 +13,18 @@ interface RegisterFormProps {
 const RegisterForm = ({ setToggleModal }: RegisterFormProps) => {
 
     const handleSocialAuth = (provider: string) => {
-        // Implement social auth logic here
-        console.log(`Registering with ${provider}`)
+        try {
+            // TODO:: to add href link to redirect callback
+            window.location.href = `http://127.0.0.1:8000/auth/${provider}/redirect`;
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
         <motion.div
-            className="fixed inset-0 bg-gray-50/75 dark:bg-gray-900/75 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0  p-3 md:p-0 bg-gray-50/75 dark:bg-gray-900/75 backdrop-blur-sm z-50 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
