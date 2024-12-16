@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { useGlobalContext } from "@/context/AppContextProvider"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import axios from "axios"
 import { useForm } from 'react-hook-form'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
 import { motion } from "framer-motion";
+import axios from "@/utils/axios";
 
 interface LoginFormProps {
     toggleModal: string | null;
@@ -19,11 +19,11 @@ type formValues = {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
-    const { isLoading,setLoading } = useState(false);
+    const [ isLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
-        mode : "onBlur"
+        mode: "onBlur"
     });
 
     // Focus the input when the modal is shown
@@ -50,16 +50,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
     }
 
 
-    
-
-    const onSubmit = async (loginData: formValues) => {
-        console.log("Form submitted:", loginData);
-        try {
-            const res = await axios.post("http://127.0.0.1:8000/api/v1/login", loginData);
-            console.log(res.data);
-        } catch (error) {
-            console.error("Error logging in:", error);
+    const { mutate } = useMutation({
+        mutationFn: (userData: formValues) => {
+            return axios.post('/login', userData);
+        },
+        onSuccess: (data) => {
+            console.log(data?.data);
+        },
+        onError: (error) => {
+            console.error("Login failed:", error);
         }
+    });
+
+
+    const onSubmit = (loginData: formValues) => {
+        console.log("Form submitted:", loginData);
+        mutate(loginData);
     };
 
     return (
@@ -144,7 +150,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                             )}
                         </Button>
                     </form>
-                    
+
 
                     <div className="mt-6 flex items-center justify-center space-x-4">
                         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
