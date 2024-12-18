@@ -3,6 +3,8 @@ import Post from '@/components/Post';
 import { usePostsData } from '@/hooks/usePostsData';
 import { PostCard } from '@/_components/PostCard';
 import JsImage from "@/assets/javascript.png"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
 const blogPosts = [
   {
@@ -76,15 +78,23 @@ const Posts: React.FC = () => {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post, index) => (
-            <PostCard key={index} {...post} />
-          ))}
+
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogPosts.map((post, index) => (
+                <PostCard key={index} {...post} />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </SidebarProvider>
+
   );
 };
 
