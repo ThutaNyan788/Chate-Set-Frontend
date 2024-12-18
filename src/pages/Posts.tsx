@@ -1,6 +1,4 @@
 import React from 'react';
-import Post from '@/components/Post';
-import { usePostsData } from '@/hooks/usePostsData';
 import { PostCard } from '@/_components/PostCard';
 import JsImage from "@/assets/javascript.png"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"

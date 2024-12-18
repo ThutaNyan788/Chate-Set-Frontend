@@ -18,8 +18,9 @@ type formValues = {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
-    const [ isLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [generalError, setGeneralError] = useState<string | null>(null);
 
     const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
         mode: "onBlur"
@@ -56,14 +57,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
         onSuccess: (data) => {
             console.log(data?.data);
         },
-        onError: (error) => {
-            console.error("Login failed:", error);
+        onError: (error: any) => {
+            setIsLoading(false);
+            if (error.response) {
+                let data = error.response.data;
+                // General error message
+                setGeneralError(data.message);
+            } else {
+                setGeneralError("An unexpected error occurred. Please try again.");
+            }
         }
     });
 
 
     const onSubmit = (loginData: formValues) => {
-        console.log("Form submitted:", loginData);
+        setIsLoading(true);
+        setGeneralError(null); // Clear any previous general errors
         mutation.mutate(loginData);
     };
 
@@ -115,6 +124,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                                 />
                             </div>
                             {errors.user && <span className="text-red-500 text-xs mt-1">This field is required</span>}
+                            {generalError && (
+                                <div className="text-red-500 text-xs mt-1">
+                                    {generalError}
+                                </div>
+                            )}
                         </div>
 
                         <div>
