@@ -12,16 +12,26 @@ interface LoginFormProps {
     setToggleModal: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-type formValues = {
+type FormValues = {
     user: string,
     password: string,
+}
+
+interface ApiError {
+    response?: {
+        data?: {
+            message: string;
+            errors?: Record<string, string[]>;
+        };
+        status?: number;
+    };
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
     const [ isLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
+    const { register, setFocus, setError, handleSubmit, formState: { errors } } = useForm<FormValues>({
         mode: "onBlur"
     });
 
@@ -50,19 +60,30 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
 
 
     const mutation = useMutation({
-        mutationFn: (userData: formValues) => {
+        mutationFn: (userData: FormValues) => {
             return axios.post('/login', userData);
         },
         onSuccess: (data) => {
-            console.log(data?.data);
+            console.log("Login successful:", data);
         },
-        onError: (error) => {
-            console.error("Login failed:", error);
+        onError: (error: ApiError) => {
+            // Handle validation errors
+            if (error.response?.status === 400 && error.response?.data?.errors) {
+                const errors = error.response.data.errors;
+                for (const [field, messages] of Object.entries(errors)) {
+                    setError(field as keyof FormValues, {
+                        type: "server",
+                        message: messages.join(", "), // Combine error messages into one
+                    });
+                }
+            } else {
+                console.log("Login failed:", error);
+            }
         }
     });
 
 
-    const onSubmit = (loginData: formValues) => {
+    const onSubmit = (loginData: FormValues) => {
         console.log("Form submitted:", loginData);
         mutation.mutate(loginData);
     };
@@ -114,7 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                                     className="pl-10"
                                 />
                             </div>
-                            {errors.user && <span className="text-red-500 text-xs mt-1">This field is required</span>}
+                            {errors.user && <span className="text-red-500 text-xs mt-1">{errors.user.message}</span>}
                         </div>
 
                         <div>
@@ -135,7 +156,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                                     {showPassword ? <Icons.eyeOff className="h-4 w-4" /> : <Icons.eye className="h-4 w-4" />}
                                 </button>
                             </div>
-                            {errors.password && <span className="text-red-500 text-xs mt-1">Password field is required</span>}
+                            {errors.password && <span className="text-red-500 text-xs mt-1">{errors.password.message}</span>}
                         </div>
 
                         <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
