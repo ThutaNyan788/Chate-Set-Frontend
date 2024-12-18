@@ -1,43 +1,36 @@
-import { useEffect, useState } from "react"
-import { useMutation } from "@tanstack/react-query"
-import { useForm } from 'react-hook-form'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Icons } from "@/components/ui/icons"
-import { motion } from "framer-motion";
-import axios from "@/utils/axios";
+import { motion } from 'framer-motion'
+import { Button } from "../ui/button";
+import { Icons } from "../ui/icons";
+import { Input } from "../ui/input";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import { useLoginData } from '@/hooks/useLoginData';
+import { useEffect, useState } from 'react';
 
 interface LoginFormProps {
     toggleModal: string | null;
     setToggleModal: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-type formValues = {
-    user: string,
-    password: string,
+interface FormInput {
+    user: string;
+    password: string;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
+//yup schema
+const schema = yup.object().shape({
+    user: yup.string().required("Username or Email is required"),
+    password : yup.string().required("Password is required")
+})
+
+const LoginForm: React.FC<LoginFormProps> = ({ toggleModal,setToggleModal }) => {
+
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [generalError, setGeneralError] = useState<string | null>(null);
-
-    const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
-        mode: "onBlur"
-    });
-
-    // Focus the input when the modal is shown
-    useEffect(() => {
-        if (toggleModal === "login") {
-            setFocus("user");
-        }
-    }, [toggleModal, setFocus]); // The effect will run when toggleModal changes
-
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
     }
-
 
     const handleSocialAuth = (provider: string) => {
         try {
@@ -49,32 +42,38 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
         }
     }
 
+    const {mutate:login,isPending} = useLoginData()
 
-    const mutation = useMutation({
-        mutationFn: (userData: formValues) => {
-            return axios.post('/login', userData);
-        },
-        onSuccess: (data) => {
-            console.log(data?.data);
-        },
-        onError: (error: any) => {
-            setIsLoading(false);
-            if (error.response) {
-                let data = error.response.data;
-                // General error message
-                setGeneralError(data.message);
-            } else {
-                setGeneralError("An unexpected error occurred. Please try again.");
-            }
+    const {
+        register,
+        handleSubmit,
+        setFocus,
+        setError,
+        formState: { errors },
+    } = useForm<FormInput>({ resolver: yupResolver(schema), mode: "onBlur" });
+
+    // Focus the input when the modal is shown
+    useEffect(() => {
+        if (toggleModal === "login") {
+            setFocus("user");
         }
-    });
+    }, [toggleModal, setFocus]); // The effect will run when toggleModal changes
 
-
-    const onSubmit = (loginData: formValues) => {
-        setIsLoading(true);
-        setGeneralError(null); // Clear any previous general errors
-        mutation.mutate(loginData);
-    };
+    //submit login form
+    const onSubmit = (formData: FormInput) => {
+        login(formData, {
+            onError: (error: any) => {
+                // Assuming the server returns validation errors in the format { field: "error message" }
+                if (error.response?.data?.errors) {
+                    Object.entries(error.response.data.errors).forEach(([key, message]) => {
+                        setError(key as keyof FormInput, { type: "server", message: message as string });
+                    });
+                } else {
+                    setError("user", { type: "server", message: "An unexpected error occurred." });
+                }
+            },
+        });
+    }
 
     return (
         // Overlay
@@ -116,26 +115,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                             <div className="relative">
                                 <Icons.user className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                                 <Input
-                                    {...register("user", { required: true })}
+                                    {...register("user")}
                                     type="text"
                                     id="user"
                                     placeholder="Username or Email"
                                     className="pl-10"
                                 />
                             </div>
-                            {errors.user && <span className="text-red-500 text-xs mt-1">This field is required</span>}
-                            {generalError && (
-                                <div className="text-red-500 text-xs mt-1">
-                                    {generalError}
-                                </div>
-                            )}
+                            {errors.user && <span className="text-red-500 text-xs mt-1">{errors.user.message}</span>}
                         </div>
 
                         <div>
                             <div className="relative">
                                 <Icons.lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                                 <Input
-                                    {...register("password", { required: true })}
+                                    {...register("password")}
                                     type={showPassword ? "text" : "password"}
                                     id="password"
                                     placeholder="Password"
@@ -149,11 +143,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                                     {showPassword ? <Icons.eyeOff className="h-4 w-4" /> : <Icons.eye className="h-4 w-4" />}
                                 </button>
                             </div>
-                            {errors.password && <span className="text-red-500 text-xs mt-1">Password field is required</span>}
+                            {errors.password && <span className="text-red-500 text-xs mt-1">{errors.password.message}</span>}
                         </div>
 
-                        <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700" disabled={isLoading}>
-                            {mutation.isPending ? (
+                        <Button type="submit" className="w-full bg-indigo-600 text-white hover:bg-indigo-700"
+                        disabled={isPending}
+                        >
+                            {isPending ? (
                                 <>
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     Signing In...
@@ -172,13 +168,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
                     </div>
 
                     <div className="mt-6 flex justify-center space-x-4">
-                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("github")} variant="outline" className="w-10 h-10 p-0">
+                        <Button
+                            disabled={isPending} onClick={() => handleSocialAuth("github")}
+                            variant="outline" className="w-10 h-10 p-0">
                             <Icons.gitHub className="h-5 w-5" />
                         </Button>
-                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("google")} variant="outline" className="w-10 h-10 p-0">
+                        <Button
+                            disabled={isPending} onClick={() => handleSocialAuth("google")}
+                            variant="outline" className="w-10 h-10 p-0">
                             <Icons.google className="h-5 w-5" />
                         </Button>
-                        <Button disabled={mutation.isPending} onClick={() => handleSocialAuth("facebook")} variant="outline" className="w-10 h-10 p-0">
+                        <Button
+                            disabled={isPending} onClick={() => handleSocialAuth("facebook")}
+                            variant="outline" className="w-10 h-10 p-0">
                             <Icons.facebook className="h-5 w-5" />
                         </Button>
                     </div>
