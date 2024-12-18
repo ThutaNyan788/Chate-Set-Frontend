@@ -1,8 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import axios from "@/utils/axios";
 import { FormInput } from "lucide-react";
-import { data } from "react-router-dom";
-
 
 type FormInput = {
     user: string,
