@@ -16,16 +16,12 @@ export const useLoginData = () => {
     return useMutation({
         mutationFn: (formData: FormInput) => userLogin(formData),
         onSuccess: ({data}) => {
-            console.log("Login successful:", data);
-
-            // Optionally store token in localStorage or state management
+            // store token in localStorage
             if (data?.data?.token) {
                 localStorage.setItem("token", data.data.token);
             }
         },
         onError: (error: any) => {
-            console.error("Login failed:", error);
-
             throw error;
         },
     })

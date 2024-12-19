@@ -1,8 +1,7 @@
 import React from 'react';
 import { PostCard } from '@/_components/PostCard';
 import JsImage from "@/assets/javascript.png"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
+import AuthenticatedNav from '@/components/layout/AuthenticatedNav';
 
 const blogPosts = [
   {
@@ -76,22 +75,24 @@ const Posts: React.FC = () => {
   // }
 
   return (
-
-    <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
-          <div className="container mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogPosts.map((post, index) => (
-                <PostCard key={index} {...post} />
-              ))}
+    <>
+      <div className="md:flex min-h-screen bg-background">
+        <AuthenticatedNav />
+        <main>
+          <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
+            <div className="container mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {blogPosts.map((post, index) => (
+                  <PostCard key={index} {...post} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-    </SidebarProvider>
+        </main>
+      </div>
+      
+    </>
+    
 
   );
 };

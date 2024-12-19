@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!).render(
     <AppContextProvider>
       <QueryClientProvider client={queryClient}>
         <Router/>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
+        {/* <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" /> */}
       </QueryClientProvider>
     </AppContextProvider>
   </StrictMode>,

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { useEffect } from 'react'
 
-const Navbar = () => {
+const TopNavbar = () => {
   const { setToggleModal } = useGlobalContext();
   const navigate = useNavigate();
 
@@ -17,7 +17,6 @@ const Navbar = () => {
   const redirectHome = () => {
     navigate("/");
   }
-
 
   const darkModeHandle = ()=>{
     setIsDarkMode(!isDarkMode);
@@ -58,4 +57,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default TopNavbar
