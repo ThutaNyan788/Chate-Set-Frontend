@@ -25,11 +25,8 @@ const Navbar = () => {
   }
 
   useEffect(() => { 
-    if (isDarkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
+    
+    isDarkMode ?  document.body.classList.add('dark') : document.body.classList.remove('dark')
   },[isDarkMode]);
 
 

@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
 import { motion } from "framer-motion";
 import axios from "@/utils/axios";
+import { useNavigate } from "react-router-dom"
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { useGlobalContext } from "@/context/AppContextProvider"
+
 
 interface LoginFormProps {
     toggleModal: string | null;
@@ -17,10 +21,13 @@ type formValues = {
     password: string,
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) => {
+const LoginForm: React.FC<LoginFormProps> = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [generalError, setGeneralError] = useState<string | null>(null);
+    const [value,setValue] = useLocalStorage<string>('token', "");
+    const {toggleModal,setToggleModal} = useGlobalContext();
+    const navigate = useNavigate();
 
     const { register, setFocus, handleSubmit, formState: { errors } } = useForm<formValues>({
         mode: "onBlur"
@@ -55,10 +62,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal, setToggleModal }) =>
             return axios.post('/login', userData);
         },
         onSuccess: (data) => {
-            console.log(data?.data);
+            
+            let {status} = data?.data;
+
+            if(status == 200)
+            {
+                let token = data?.data?.data.token;
+                
+                setValue(token);
+                setToggleModal("");
+                navigate("/posts");
+            }else{
+                navigate("/");
+            }
+            
         },
         onError: (error: any) => {
             setIsLoading(false);
+            
             if (error.response) {
                 let data = error.response.data;
                 // General error message
