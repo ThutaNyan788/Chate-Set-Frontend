@@ -37,10 +37,10 @@ const AuthenticatedNav = () => {
     return (    
         <>
             {/* sidenav for large screens / desktop */}
-            <nav className='hidden md:block'>
+            <nav className='hidden md:block border-r dark:bg-gray-950 p-4'>
                 <motion.div
                     className={cn(
-                        "relative flex h-screen flex-col border-r dark:bg-gray-950 p-4",
+                        "relative flex min-h-screen flex-col ",
                         isCollapsed ? "w-[80px]" : "w-[240px]"
                     )}
                     animate={{ width: isCollapsed ? 80 : 240 }}

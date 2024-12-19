@@ -1,7 +1,7 @@
 import React from 'react';
 import { PostCard } from '@/_components/PostCard';
 import JsImage from "@/assets/javascript.png"
-import AuthenticatedNav from '@/components/layout/AuthenticatedNav';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 
 const blogPosts = [
   {
@@ -75,23 +75,16 @@ const Posts: React.FC = () => {
   // }
 
   return (
-    <>
-      <div className="md:flex min-h-screen bg-background">
-        <AuthenticatedNav />
-        <main>
-          <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
-            <div className="container mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {blogPosts.map((post, index) => (
-                  <PostCard key={index} {...post} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </main>
+    
+     <AuthenticatedLayout>
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogPosts.map((post, index) => (
+            <PostCard key={index} {...post} />
+          ))}
+        </div>
       </div>
-      
-    </>
+    </AuthenticatedLayout>
     
 
   );

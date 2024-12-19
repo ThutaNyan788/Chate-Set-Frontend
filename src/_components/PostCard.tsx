@@ -40,19 +40,19 @@ export function PostCard({
                     </Avatar>
                     <div className="space-y-2">
                         <h3 className="font-medium leading-none">{author.name}</h3>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             {readTime} • {date}
                         </p>
                     </div>
                 </div>
-                <h2 className="text-xl md:text-2xl font-bold text-[#00E5B5]">{title}</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{title}</h2>
                 <div className="flex flex-wrap gap-2">
                     {tags.map((tag) => (
                         <Link to="/" key={tag}>
                             <Badge
                                 key={tag}
                                 variant="secondary"
-                                className="bg-gray-900 dark:border-gray-700 hover:bg-[#1A2333] text-gray-300"
+                                className="bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-[#1A2333] text-gray-700 dark:text-gray-300"
                             >
                                 #{tag}
                             </Badge>
@@ -74,7 +74,7 @@ export function PostCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Heart className="mr-1 h-4 w-4" />
                         <span className="text-xs md:text-sm">{stats.likes}k</span>
@@ -82,7 +82,7 @@ export function PostCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <MessageCircle className="mr-1 h-4 w-4" />
                         <span className="text-xs md:text-sm">{stats.comments}</span>
@@ -90,14 +90,14 @@ export function PostCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Bookmark className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Link2 className="h-4 w-4" />
                     </Button>
