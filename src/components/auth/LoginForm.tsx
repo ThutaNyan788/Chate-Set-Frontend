@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useLoginData } from '@/hooks/useLoginData';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProps {
     toggleModal: string | null;
@@ -26,6 +27,7 @@ const schema = yup.object().shape({
 
 const LoginForm: React.FC<LoginFormProps> = ({ toggleModal,setToggleModal }) => {
 
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -42,7 +44,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal,setToggleModal }) => 
         }
     }
 
-    const {mutate:login,isPending} = useLoginData()
+    const { mutate: login, isPending } = useLoginData();
 
     const {
         register,
@@ -62,6 +64,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggleModal,setToggleModal }) => 
     //submit login form
     const onSubmit = (formData: FormInput) => {
         login(formData, {
+            onSuccess: () => {
+                setToggleModal(null);
+                navigate("/posts");
+            },
             onError: (error: any) => {
                 // Assuming the server returns validation errors in the format { field: "error message" }
                 if (error.response?.data?.errors) {

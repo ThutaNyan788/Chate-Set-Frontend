@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
+import TopNavbar from "./components/layout/TopNavbar";
 import LoginForm from "./components/auth/LoginForm";
 import RegisterForm from "./components/auth/RegisterForm";
 import { useGlobalContext } from "./context/AppContextProvider";
@@ -11,7 +11,6 @@ export default function App() {
 
   return (
     <>
-      <Navbar />
       <Outlet />
       <AnimatePresence>
         {toggleModal === "login" && <LoginForm toggleModal={toggleModal} setToggleModal={setToggleModal} />}
