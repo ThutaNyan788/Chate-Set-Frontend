@@ -75,13 +75,13 @@ const AuthenticatedNav = () => {
                                     return (
                                         <Tooltip key={index}>
                                             <TooltipTrigger asChild>
-                                                <a
+                                                <a 
                                                     href={item.label}
                                                     onClick={(e) => { e.preventDefault(); setActiveTab(index) }}
                                                     className={cn(
                                                         "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent dark:hover:bg-gray-800 hover:text-accent-foreground",
                                                         isActive ? "bg-accent dark:bg-gray-800" : "transparent",
-                                                        isCollapsed ? "justify-center" : "justify-start"
+                                                        isCollapsed ? "justify-center " : "justify-start"
                                                     )}
                                                 >
                                                     <Icon className="h-5 w-5" />
@@ -104,7 +104,7 @@ const AuthenticatedNav = () => {
                                                     )}
                                                 </a>
                                             </TooltipTrigger>
-                                            <TooltipContent side="right" className="flex items-center gap-4">
+                                            <TooltipContent side="right" className={`${isCollapsed == true ? 'flex' :'hidden'}  items-center gap-4`}>
                                                 {item.label}
                                             </TooltipContent>
                                         </Tooltip>
