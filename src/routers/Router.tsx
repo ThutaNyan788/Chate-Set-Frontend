@@ -1,4 +1,5 @@
 import App from "@/App";
+import SocialiteCallback from "@/components/auth/SocialiteCallback";
 import Home from "@/pages/Home";
 import Posts from "@/pages/Posts";
 import {
@@ -22,12 +23,16 @@ const router = createBrowserRouter([
             },
             {
                 path: "/socialite-callback/:userId",
-                element: <h2>hello</h2>
+                element: <SocialiteCallback/>
             },
             {
                 path: "/posts",
                 element: (<><Posts /></>),
             },
+            {
+                path: "*",
+                element: <h1>404 not found</h1>
+            }
         ],
     },
     

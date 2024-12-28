@@ -34,7 +34,7 @@ const AuthenticatedNav = () => {
     const [activeTab, setActiveTab] = React.useState(0);
     const [isCollapsed, setIsCollapsed] = React.useState(false)
 
-    return (    
+    return (
         <>
             {/* sidenav for large screens / desktop */}
             <nav className='hidden md:block border-r dark:bg-gray-950 p-4'>
@@ -47,16 +47,19 @@ const AuthenticatedNav = () => {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                     <div className="flex items-center justify-between cursor-pointer">
-                        <motion.div
-                            className="flex items-center gap-2"
-                            animate={{ opacity: isCollapsed ? 0 : 1 }}
-                            transition={{ duration: 0.2 }}
-                            onClick={() => navigate('/')}
-                        >
+                        <div className="flex items-center gap-2" onClick={() => navigate('/')}>
                             <img src={brandIcon} alt="brand icon" width={50} height={50} />
 
-                            {!isCollapsed && <span className="text-xl font-bold">Chate Set</span>}
-                        </motion.div>
+                            <motion.div
+                                className=""
+                                animate={{ opacity: isCollapsed ? 0 : 1 }}
+                                transition={{ duration: .2}}
+
+                            >
+
+                                {!isCollapsed && <span className="text-xl font-bold">ChateSet</span>}
+                            </motion.div>
+                        </div>
                         <Button
                             variant="ghost"
                             size="icon"
@@ -75,7 +78,7 @@ const AuthenticatedNav = () => {
                                     return (
                                         <Tooltip key={index}>
                                             <TooltipTrigger asChild>
-                                                <a 
+                                                <a
                                                     href={item.label}
                                                     onClick={(e) => { e.preventDefault(); setActiveTab(index) }}
                                                     className={cn(
@@ -104,7 +107,7 @@ const AuthenticatedNav = () => {
                                                     )}
                                                 </a>
                                             </TooltipTrigger>
-                                            <TooltipContent side="right" className={`${isCollapsed == true ? 'flex' :'hidden'}  items-center gap-4`}>
+                                            <TooltipContent side="right" className={`${isCollapsed == true ? 'flex' : 'hidden'}  items-center gap-4`}>
                                                 {item.label}
                                             </TooltipContent>
                                         </Tooltip>
@@ -113,7 +116,7 @@ const AuthenticatedNav = () => {
                             </TooltipProvider>
                         </nav>
                     </ScrollArea>
-                    
+
                 </motion.div>
             </nav>
             {/* mobile bottom nav here  */}

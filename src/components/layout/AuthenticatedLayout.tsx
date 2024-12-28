@@ -7,6 +7,8 @@ type Props = {
     children: React.ReactNode;
 }
 
+
+
 const AuthenticatedLayout = ({ children }: Props) => {
     return (
         <>
