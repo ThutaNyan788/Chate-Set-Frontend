@@ -1,13 +1,31 @@
 import React from 'react'
 import AuthenticatedNav from '@/components/layout/AuthenticatedNav';
 import TopNavbar from './TopNavbar';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 
 type Props = {
     children: React.ReactNode;
 }
 
+
+
+
 const AuthenticatedLayout = ({ children }: Props) => {
+
+    const isAuthenticated = useAuth();
+
+
+    if (isAuthenticated === null) {
+        return <p>Loading...</p>; // Show loading state
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/" />
+    }
+
+
     return (
         <>
             <div className="md:flex min-h-screen bg-background">
@@ -25,4 +43,4 @@ const AuthenticatedLayout = ({ children }: Props) => {
     )
 }
 
-export default AuthenticatedLayout
+export default AuthenticatedLayout  

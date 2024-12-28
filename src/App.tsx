@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import TopNavbar from "./components/layout/TopNavbar";
 import LoginForm from "./components/auth/LoginForm";
 import RegisterForm from "./components/auth/RegisterForm";
 import { useGlobalContext } from "./context/AppContextProvider";
