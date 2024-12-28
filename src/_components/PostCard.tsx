@@ -14,25 +14,26 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const data = post.attributes;
-    const author = post.relationships.author.data;
+    const author = post.includes.author.attributes;
 
     return (
-            <Card className="w-full bg-white shadow dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
+            <Card className="w-full max-h-[450px] bg-white shadow dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
                 <CardHeader className="space-y-4">
                     <div className="flex items-center space-x-3">
-                        {/* <Avatar className="h-12 w-12">
-                            <AvatarImage src={author.avatar} alt={author.name} />
+                        <Avatar className="h-12 w-12">
+                            <AvatarImage src={author.profile_photo_path} alt={author.name} />
                             <AvatarFallback>{author.name[0]}</AvatarFallback>
-                        </Avatar> */}
+                        </Avatar>
+                        
                         <div className="space-y-2">
-                            <h3 className="font-medium leading-none">{author.name}</h3>
+                        <h3 className="font-medium leading-none line-clamp-1">{author.name}</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {data.read_time} minutes • {data.created_at}
+                                {data.read_time} m read • {data.created_at}
                             </p>
                         </div>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{data.title}</h2>
-                    <div className="flex flex-wrap gap-2">
+                <h2 className="line-clamp-2 text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{data.title}</h2>
+                <div className="flex flex-wrap gap-2 overflow-hidden h-6">
                         {data.tags.map((tag) => (
                             <Link to="/" key={tag}>
                                 <Badge
@@ -49,9 +50,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <CardContent>
                     <div className="rounded-lg overflow-hidden">
                         <img
-                            // src={data.}
+                            src={data.img_url}
                             alt="Post cover"
-                            className="w-full h-40 md:h-48 object-cover"
+                            className="w-full h-36 md:h-40 object-cover"
                         />
                     </div>
                 </CardContent>
