@@ -14,6 +14,7 @@ const AuthenticatedLayout = ({ children }: Props) => {
     const isAuthenticated = useAuth();
 
     if (isAuthenticated !== null && isAuthenticated === false) {
+        localStorage.removeItem('token');
         return <Navigate to="/" />
     }
 
