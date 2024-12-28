@@ -1,13 +1,13 @@
 import React from 'react'
-import { PostData } from '@/models/PostModel';
+import { PostData } from '@/models/Models';
 
 interface PostProps {
   post: PostData;
 }
 
-const Post: React.FC<PostProps> = ({post}) => {
+const Post: React.FC<PostProps> = ({ post }) => {
   return (
-    <div>{ post.attributes.title }</div>
+    <div>{post.attributes.title}</div>
   )
 }
 

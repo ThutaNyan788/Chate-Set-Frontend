@@ -14,7 +14,7 @@ const SocialiteCallback = (props: Props) => {
         const userId = params.userId;
         if (userId && token) {
             localStorage.setItem('userId', userId);
-            localStorage.setItem("login_token", token);
+            localStorage.setItem("token", token);
             navigate('/posts');
         } else {
             navigate('/');

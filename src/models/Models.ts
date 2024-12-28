@@ -6,9 +6,15 @@ export interface PostData {
     slug: string;
     tags: [];
     content: string;
+    read_time: number;
     schedule_date: string;
     created_at: string;
     updated_at: string;
+  };
+  relationships: {
+    author: {
+      data : object;
+    };
   };
 }
 
