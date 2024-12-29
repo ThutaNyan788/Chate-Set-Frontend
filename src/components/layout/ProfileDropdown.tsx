@@ -5,23 +5,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { useState } from 'react'
 import axios from '@/utils/axios'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const ProfileDropdown = () => {
 
     const [isOpen, setIsOpen] = useState(false)
     const toggleDropdown = () => setIsOpen(!isOpen);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const Logout = async () => {
-        let response = await axios.post("/logout", null, {
+        
+        console.log('token', localStorage.getItem('token'));
+        const response = await axios.post("/logout", null, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         });
+        console.log(response);
         if (response.status === 200) {
-            localStorage.removeItem('token')
-            navigate("/");
+            localStorage.removeItem('token');
+            if(location.pathname !== "/") {
+                navigate("/");
+            } else {
+                window.location.reload();
+            }
         }
     }
 
