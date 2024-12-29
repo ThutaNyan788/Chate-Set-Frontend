@@ -93,7 +93,7 @@ const ProfileDropdown = () => {
                         animate="visible"
                         exit="hidden"
                         variants={dropdownVariants}
-                        className="absolute right-0 mt-2 w-48 rounded-md shadow-lg px-1 py-1 bg-background ring-1 ring-black ring-opacity-5"
+                        className="absolute right-0 mt-2 w-48 z-50 rounded-md shadow-lg px-1 py-1 bg-background ring-1 ring-black ring-opacity-5"
                     >
                         <motion.ul
                             variants={staggerMenuItems}
