@@ -1,16 +1,29 @@
-import React from 'react'
+
 import { motion, AnimatePresence } from 'framer-motion'
-import { User, Settings, LogOut, ArrowDown, ChevronDown } from 'lucide-react'
+import { User, Settings, LogOut, ChevronDown } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import axios from '@/utils/axios'
+import { useNavigate } from 'react-router-dom'
 
 const ProfileDropdown = () => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const toggleDropdown = () => setIsOpen(!isOpen);
+    const navigate = useNavigate();
 
-    const toggleDropdown = () => setIsOpen(!isOpen)
+    const Logout = async () => {
+        let response = await axios.post("/logout", null, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        if (response.status === 200) {
+            localStorage.removeItem('token')
+            navigate("/");
+        }
+    }
 
     const dropdownVariants = {
         hidden: {
@@ -100,7 +113,7 @@ const ProfileDropdown = () => {
                                 </Button>
                             </motion.li>
                             <motion.li variants={menuItemVariants}>
-                                <Button variant="ghost" className="w-full justify-start hover:text-red-600 dark:hover:text-red-600" onClick={() => console.log('Logout clicked')}>
+                                <Button onClick={Logout} variant="ghost" className="w-full justify-start hover:text-red-600 dark:hover:text-red-600">
                                     <LogOut className="mr-2 h-4 w-4" />
                                     Logout
                                 </Button>
