@@ -11,6 +11,7 @@ import {
     createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
+import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 
 
 const router = createBrowserRouter([
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Home/>
+                element: <Home />
             },
             {
                 path: "/about",
@@ -28,31 +29,36 @@ const router = createBrowserRouter([
             },
             {
                 path: "/socialite-callback/:userId",
-                element: <SocialiteCallback/>
+                element: <SocialiteCallback />
             },
             {
-                path: "/posts",
-                element: <Posts />,
-            },
-            {
-                path: "/posts/:id",
-                element: <PostDetail />,
-            },
-            {
-                path: "/explore",
-                element: <Explore />
-            },
-            {
-                path: "/notifications",
-                element: <Notifications />
-            },
-            {
-                path: "/library",
-                element:<Library />
-            },
-            {
-                path: "/groups",
-                element: <Groups />
+                element: <AuthenticatedLayout />,
+                children: [
+                    {
+                        path: "/posts",
+                        element: <Posts />,
+                    },
+                    {
+                        path: "/posts/:id",
+                        element: <PostDetail />,
+                    },
+                    {
+                        path: "/explore",
+                        element: <Explore />
+                    },
+                    {
+                        path: "/notifications",
+                        element: <Notifications />
+                    },
+                    {
+                        path: "/library",
+                        element: <Library />
+                    },
+                    {
+                        path: "/groups",
+                        element: <Groups />
+                    },
+                ],
             },
             {
                 path: "*",
@@ -60,7 +66,7 @@ const router = createBrowserRouter([
             }
         ],
     },
-    
+
 ]);
 
 

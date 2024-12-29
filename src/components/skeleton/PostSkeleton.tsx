@@ -36,21 +36,21 @@ const PostSkeleton: React.FC = () => {
                 <div className="flex space-x-2 md:space-x-4">
                     <div
                     
-                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 dark:bg-gray-800 rounded-lg"
+                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-lg"
                     >
                        
                     </div>
                     <div
-                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 dark:bg-gray-800 rounded-lg"
+                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-lg"
                     >
                         
                     </div>
                     <div
-                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 dark:bg-gray-800 rounded-lg"
+                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-lg"
                     >
                     </div>
                     <div
-                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 dark:bg-gray-800 rounded-lg"
+                        className="w-10 h-8 animate-pulse text-gray-700 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-lg"
                     >
                     </div>
                 </div>
