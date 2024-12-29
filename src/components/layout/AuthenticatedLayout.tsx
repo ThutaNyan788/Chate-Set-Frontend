@@ -1,15 +1,10 @@
 import React from 'react'
 import AuthenticatedNav from '@/components/layout/AuthenticatedNav';
 import TopNavbar from './TopNavbar';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
-
-type Props = {
-    children: React.ReactNode;
-}
-
-const AuthenticatedLayout = ({ children }: Props) => {
+const AuthenticatedLayout = () => {
 
     const isAuthenticated = useAuth();
 
@@ -27,7 +22,7 @@ const AuthenticatedLayout = ({ children }: Props) => {
 
                     <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6">
                         {/* child element here */}
-                        {children}
+                        <Outlet/>
                     </div>
                 </main>
             </div>

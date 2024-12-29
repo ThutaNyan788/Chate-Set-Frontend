@@ -10,6 +10,7 @@ import ProfileDropdown from './ProfileDropdown'
 
 
 const TopNavbar = () => {
+
   const { setToggleModal } = useGlobalContext();
   const navigate = useNavigate();
 
