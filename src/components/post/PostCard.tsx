@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { PostData } from "@/models/Models"
 import { Bookmark, Heart, Link2, MessageCircle } from 'lucide-react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 interface PostCardProps {
     post: PostData;
@@ -16,8 +16,14 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
 
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate(`/post/${post.id}`);
+    }
+
+
     return (
-            <Card className="w-full max-h-[450px] bg-white shadow dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
+            <Card onClick={handleNavigate} className="w-full max-h-[450px] bg-white shadow-none hover:shadow-lg dark:shadow-lg dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
                 <CardHeader className="space-y-4">
                     <div className="flex items-center space-x-3">
                         <Avatar className="h-12 w-12">
