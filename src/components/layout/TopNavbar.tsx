@@ -34,7 +34,7 @@ const TopNavbar = () => {
   }, [isDarkMode]);
 
   //for current use only 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<any>(localStorage.getItem("token"));
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -71,6 +71,7 @@ const TopNavbar = () => {
           className="outline-none text-xl"
           placeholder={undefined}
         />
+        
         <div>
           <Button
             onClick={() => setToggleModal("login")}
