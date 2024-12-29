@@ -18,7 +18,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
     const navigate = useNavigate();
     const handleNavigate = () => {
-        navigate(`/post/${post.id}`);
+        navigate(`/posts/${post.id}`);
     }
 
 
