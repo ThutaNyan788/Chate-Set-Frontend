@@ -6,7 +6,7 @@ import { Compass, Bell, Newspaper, Atom, Library, ChevronLeft, ChevronRight } fr
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
 import brandIcon from '@/assets/chate-set.svg'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Tooltip,
@@ -29,10 +29,18 @@ const navItems: NavItem[] = [
 ]
 
 const AuthenticatedNav = () => {
+    
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = React.useState(0);
-    const [isCollapsed, setIsCollapsed] = React.useState(false)
+    const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+    const location = useLocation();
+    React.useEffect(() => {
+        const path = location.pathname;
+        const index = navItems.findIndex((item) => item.href === path);
+        setActiveTab(index);
+    }, [location.pathname]);
 
     return (
         <>
@@ -80,7 +88,7 @@ const AuthenticatedNav = () => {
                                             <TooltipTrigger asChild>
                                                 <a
                                                     href={item.label}
-                                                    onClick={(e) => { e.preventDefault(); setActiveTab(index) }}
+                                                    onClick={(e) => { e.preventDefault(); setActiveTab(index); navigate(item.href) }}
                                                     className={cn(
                                                         "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent dark:hover:bg-gray-800 hover:text-accent-foreground",
                                                         isActive ? "bg-accent dark:bg-gray-800" : "transparent",
@@ -127,8 +135,7 @@ const AuthenticatedNav = () => {
                     return (
                         <a
                             key={index}
-                            href={item.label}
-                            onClick={(e) => { e.preventDefault(); setActiveTab(index) }}
+                            onClick={(e) => { e.preventDefault(); setActiveTab(index);  navigate(item.href) }}
                             className={cn(
                                 'relative flex h-full w-full flex-col items-center justify-center gap-1',
                                 activeTab === index ? 'text-primary' : 'text-muted-foreground'

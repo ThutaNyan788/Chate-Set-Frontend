@@ -1,9 +1,7 @@
 import React from 'react';
-import PostCard from '@/_components/PostCard';
-import JsImage from "@/assets/javascript.png"
+import PostCard from '@/components/post/PostCard';
 import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { usePostsData } from '@/hooks/usePostsData';
-import { PostData } from '@/models/Models';
 import PostSkeleton from '@/components/skeleton/PostSkeleton';
 
 
