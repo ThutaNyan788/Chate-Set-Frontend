@@ -1,6 +1,6 @@
 import App from "@/App";
 import SocialiteCallback from "@/components/auth/SocialiteCallback";
-import { PostDetail } from "@/components/post/PostDetail";
+import  PostDetail  from "@/components/post/PostDetail";
 import Explore from "@/pages/Explore";
 import Home from "@/pages/Home";
 import Notifications from "@/pages/Notifications";
