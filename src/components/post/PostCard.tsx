@@ -18,13 +18,15 @@ import TestImage from "@/assets/javascript.png"
 
 interface PostCardProps {
     post: PostData;
+    onLikeToggle: () => void;
 }
 
 
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
+    const like_count = post.relationships.likes.data.attributes.likes_count;
 
     const navigate = useNavigate();
     const handleNavigate = () => {
@@ -125,12 +127,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <CardFooter>
                 <div className="flex space-x-2 md:space-x-4">
                     <Button
+                        onClick={onLikeToggle}
                         variant="ghost"
                         size="sm"
                         className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Heart className="mr-1 h-4 w-4" />
-                        <span className="text-xs md:text-sm">4k</span>
+                        <span className="text-xs md:text-sm">{like_count}</span>
                     </Button>
                     <Button
                         variant="ghost"

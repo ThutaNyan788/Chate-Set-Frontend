@@ -8,6 +8,10 @@ import PostSkeleton from '@/components/skeleton/PostSkeleton';
 const Posts: React.FC = () => {
   const { data: posts, error, isLoading } = usePostsData();
 
+  const handleLikeToggle = (postId: number) => {
+    console.log(postId);
+  }
+
 
   return (
 
@@ -25,7 +29,11 @@ const Posts: React.FC = () => {
       }
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts?.map((post, index) => (
-          <PostCard key={index} post={post} />
+          <PostCard
+            key={index}
+            post={post}
+            onLikeToggle={()=>handleLikeToggle(post.id)}
+          />
         ))}
       </div>
     </div>

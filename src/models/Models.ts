@@ -23,6 +23,15 @@ export interface PostData {
         self: string;
       };
     };
+    likes: {
+      data: {
+        type: string;
+        id: number;
+        attributes: {
+            'likes_count': number;
+          }
+      };
+    }
   };
   includes: {
     author: UserData;
