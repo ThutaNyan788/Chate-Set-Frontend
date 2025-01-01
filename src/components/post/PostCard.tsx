@@ -6,6 +6,7 @@ import { PostData } from "@/models/Models"
 import { Bookmark, Heart, Link2, MessageCircle } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
 
+import { motion } from "framer-motion"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -134,7 +135,20 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
                         size="sm"
                         className={`interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg ${is_liked ? 'text-red-500' : ''}`}
                     >
-                        <Heart className={`mr-1 h-4 w-4 ${is_liked ? 'fill-current text-red-500' : ''}`} />
+                        <motion.div
+                            initial={{ scale: 1 }}
+                            animate={{
+                                scale: is_liked ? 1.1 : 1, // Scale up when liked, scale down otherwise
+                            }}
+                            transition={{
+                                type: "spring", // Use a spring animation for a bouncing effect
+                                stiffness: 300,
+                                damping: 20,
+                            }}
+                            
+                        >
+                            <Heart className={`mr-1 h-4 w-4 cursor-pointer ${is_liked ? "fill-current text-red-500" : ""}`} />
+                        </motion.div>
                         <span className="text-xs md:text-sm">{like_count}</span>
                     </Button>
                     <Button
