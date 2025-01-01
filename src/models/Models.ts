@@ -28,7 +28,8 @@ export interface PostData {
         type: string;
         id: number;
         attributes: {
-            'likes_count': number;
+          'likes_count': number;
+          'is_liked': boolean;
           }
       };
     }
