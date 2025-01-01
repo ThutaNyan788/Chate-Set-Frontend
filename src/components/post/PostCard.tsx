@@ -27,9 +27,11 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
     const like_count = post.relationships.likes.data.attributes.likes_count;
+    const is_liked = post.relationships.likes.data.attributes.is_liked;
 
     const navigate = useNavigate();
-    const handleNavigate = () => {
+    const handleNavigate = (e:React.MouseEvent) => {
+        if ((e.target as HTMLElement).closest(".interaction")) return;
         navigate(`/posts/${post.id}`);
     }
 
@@ -125,20 +127,20 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
                 </div>
             </CardContent>
             <CardFooter>
-                <div className="flex space-x-2 md:space-x-4">
+                <div className="flex space-x-2 md:space-x-4 interactions">
                     <Button
                         onClick={onLikeToggle}
                         variant="ghost"
                         size="sm"
-                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className={`interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg ${is_liked ? 'text-red-500' : ''}`}
                     >
-                        <Heart className="mr-1 h-4 w-4" />
+                        <Heart className={`mr-1 h-4 w-4 ${is_liked ? 'fill-current text-red-500' : ''}`} />
                         <span className="text-xs md:text-sm">{like_count}</span>
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <MessageCircle className="mr-1 h-4 w-4" />
                         <span className="text-xs md:text-sm">3</span>
@@ -146,14 +148,14 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Bookmark className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
                         <Link2 className="h-4 w-4" />
                     </Button>
