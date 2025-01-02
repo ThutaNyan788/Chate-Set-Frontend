@@ -3,16 +3,22 @@ import PostCard from '@/components/post/PostCard';
 import { usePostsData } from '@/hooks/usePostsData';
 import PostSkeleton from '@/components/skeleton/PostSkeleton';
 import { useLikeMutation } from '@/hooks/useLikeMutation';
+import { useBookmarkMutation } from '@/hooks/useBookmarkMutation';
 
 
 const Posts: React.FC = () => {
   const { data: posts, error: postError, isLoading: postLoading } = usePostsData();
   // Use the custom hook for liking a post
-  const { mutate: toggleLike, error : likeError} = useLikeMutation();
+  const { mutate: toggleLike, error: likeError } = useLikeMutation();
+  const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation();
+  
   const handleLikeToggle = async (postId: number) => {
     toggleLike(postId);
   };
 
+  const handleBookmarkToggle = async (postId: number) => {
+    toggleBookmark(postId);
+  };
 
   return (
 
@@ -34,6 +40,7 @@ const Posts: React.FC = () => {
             key={index}
             post={post}
             onLikeToggle={() => handleLikeToggle(post.id)}
+            onBookmarkToggle={() => handleBookmarkToggle(post.id)}
           />
         ))}
       </div>

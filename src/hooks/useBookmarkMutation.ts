@@ -2,8 +2,8 @@ import {  useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
 import { PostData } from "@/models/Models";
 
-const toggleLikeApi = (postId: number) => {
-    return axios.post(`/posts/${postId}/like`, null, {
+const toggleBookmarkApi = (postId: number) => {
+    return axios.post(`/posts/${postId}/bookmark`, null, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -12,34 +12,26 @@ const toggleLikeApi = (postId: number) => {
 
 
 
-export const useLikeMutation = () => {
+export const useBookmarkMutation = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (postId: number) => toggleLikeApi(postId),
+        mutationFn: (postId: number) => toggleBookmarkApi(postId),
         //handle optimistic updates
         onMutate: async (postId: number) => {
             await queryClient.cancelQueries({
                 queryKey: ["posts"],
             });
             const previousPosts = queryClient.getQueryData(["posts"]);
-            // Optimistically update the `is_liked` state and `likes_count`
+            // Optimistically update the `is_bookmarked` state`
             queryClient.setQueryData(["posts"], (oldPosts: PostData[]) =>
                 oldPosts.map((post: PostData) =>
                     post.id === postId
                         ? {
                             ...post,
-                            relationships: {
-                                ...post.relationships,
-                                likes: {
-                                    // Toggle `is_liked`
-                                    is_liked: !post.relationships.likes.is_liked,
-                                    // Update `likes_count`
-                                    likes_count: post.relationships.likes.is_liked
-                                        ? post.relationships.likes.likes_count - 1
-                                        : post.relationships.likes.likes_count + 1,
-                                       
-                                },
-                            },
+                            attributes: {
+                                ...post.attributes,
+                                is_bookmarked: !post.attributes.is_bookmarked,
+                            }
                         }
                         : post
                 )

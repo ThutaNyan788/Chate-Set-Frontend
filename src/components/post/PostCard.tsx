@@ -20,15 +20,17 @@ import TestImage from "@/assets/javascript.png"
 interface PostCardProps {
     post: PostData;
     onLikeToggle: () => void;
+    onBookmarkToggle : () => void;
 }
 
 
 
-const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
+const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle,onBookmarkToggle }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
-    const like_count = post.relationships.likes.data.attributes.likes_count;
-    const is_liked = post.relationships.likes.data.attributes.is_liked;
+    const like_count = post.relationships.likes.likes_count;
+    const is_liked = post.relationships.likes.is_liked;
+    const is_bookmarked = post.attributes.is_bookmarked;
 
     const navigate = useNavigate();
     const handleNavigate = (e:React.MouseEvent) => {
@@ -160,11 +162,25 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle }) => {
                         <span className="text-xs md:text-sm">3</span>
                     </Button>
                     <Button
+                        onClick={onBookmarkToggle}
                         variant="ghost"
                         size="sm"
                         className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                     >
-                        <Bookmark className="h-4 w-4" />
+                        <motion.div
+                            initial={{ scale: 1 }}
+                            animate={{
+                                scale: is_bookmarked ? 1.1 : 1, // Scale up when liked, scale down otherwise
+                            }}
+                            transition={{
+                                type: "spring", // Use a spring animation for a bouncing effect
+                                stiffness: 300,
+                                damping: 20,
+                            }}
+
+                        >
+                            <Bookmark className={`mr-1 h-4 w-4 cursor-pointer ${is_bookmarked ? "fill-current text-brandColor" : ""}`} />
+                        </motion.div>
                     </Button>
                     <Button
                         variant="ghost"

@@ -9,6 +9,7 @@ export interface PostData {
     tags: [];
     content: string;
     read_time: number;
+    is_bookmarked: boolean;
     schedule_date: string;
     created_at: string;
     updated_at: string;
@@ -24,15 +25,9 @@ export interface PostData {
       };
     };
     likes: {
-      data: {
-        type: string;
-        id: number;
-        attributes: {
-          'likes_count': number;
-          'is_liked': boolean;
-          }
-      };
-    }
+      'likes_count': number;
+      'is_liked': boolean;
+      }
   };
   includes: {
     author: UserData;
