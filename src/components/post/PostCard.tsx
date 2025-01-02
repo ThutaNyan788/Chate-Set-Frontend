@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreVertical, Share2, Eye, ThumbsDown, Clock, UserPlus, Ban, Flag } from 'lucide-react'
 import TestImage from "@/assets/javascript.png"
+import CopyLinkButton from "./CopyLinkButton"
 
 interface PostCardProps {
     post: PostData;
@@ -182,13 +183,7 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle,onBookmarkToggle 
                             <Bookmark className={`mr-1 h-4 w-4 cursor-pointer ${is_bookmarked ? "fill-current text-brandColor" : ""}`} />
                         </motion.div>
                     </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
-                    >
-                        <Link2 className="h-4 w-4" />
-                    </Button>
+                    <CopyLinkButton link={'http://localhost:5173/posts/'+post.id} />
                 </div>
             </CardFooter>
         </Card>
