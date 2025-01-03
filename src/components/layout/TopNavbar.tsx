@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { useEffect, useState } from 'react'
 import ProfileDropdown from './ProfileDropdown'
+import { CreatePostButton } from '../post/CreatePostButton'
 
 
 const TopNavbar = () => {
@@ -52,8 +53,11 @@ const TopNavbar = () => {
           toggle={darkModeHandle}
           className="outline-none text-xl"
           placeholder={undefined}
-        />
+      />
+      <div className="flex gap-5">
+        <CreatePostButton />
         <ProfileDropdown />
+      </div>
 
     </div>
   ) : (
