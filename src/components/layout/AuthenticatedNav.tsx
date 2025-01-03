@@ -14,6 +14,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useAuth } from '@/hooks/useAuth'
 interface NavItem {
     icon: React.ElementType,
     label: string,
@@ -31,6 +32,7 @@ const navItems: NavItem[] = [
 const AuthenticatedNav = () => {
 
     const navigate = useNavigate();
+    const isAuthenticated = useAuth();
 
     const [activeTab, setActiveTab] = React.useState(0);
     const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -41,6 +43,14 @@ const AuthenticatedNav = () => {
         const index = navItems.findIndex((item) => item.href === path);
         setActiveTab(index);
     }, [location.pathname]);
+
+    const handleClickLogo = () => {
+        if (isAuthenticated) {
+            navigate('/posts');
+        } else {
+            navigate('/');
+        }
+    }
 
     return (
         <>
@@ -55,7 +65,7 @@ const AuthenticatedNav = () => {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                     <div className="flex items-center justify-between cursor-pointer">
-                        <div className="flex items-center gap-2" onClick={() => navigate('/')}>
+                        <div className="flex items-center gap-2" onClick={handleClickLogo}>
                             <img src={brandIcon} alt="brand icon" width={50} height={50} />
 
                             <motion.div
