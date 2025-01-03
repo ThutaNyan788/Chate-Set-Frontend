@@ -3,7 +3,7 @@ import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom';
 
 
-export const CreatePostButton = () => {
+export const PostCreateButton = () => {
 
     const navigate = useNavigate();
     const handleNavigate = () => {
@@ -13,7 +13,7 @@ export const CreatePostButton = () => {
     return (
         <Button
             onClick={handleNavigate}
-            className=" font-semibold rounded-lg"
+            className=" font-semibold rounded-lg active:scale-95 transition-transform"
         >
             New Post
         </Button>

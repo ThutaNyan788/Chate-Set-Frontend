@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { useEffect, useState } from 'react'
 import ProfileDropdown from './ProfileDropdown'
-import { CreatePostButton } from '../post/CreatePostButton'
+import { PostCreateButton } from '../post/PostCreateButton'
 
 
 const TopNavbar = () => {
@@ -55,7 +55,9 @@ const TopNavbar = () => {
           placeholder={undefined}
       />
       <div className="flex gap-5">
-        <CreatePostButton />
+        <div className="hidden md:block">
+          <PostCreateButton />
+          </div>
         <ProfileDropdown />
       </div>
 
