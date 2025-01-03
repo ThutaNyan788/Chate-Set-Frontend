@@ -36,7 +36,7 @@ const PostCard: React.FC<PostCardProps> = ({ post,onLikeToggle,onBookmarkToggle 
     const navigate = useNavigate();
     const handleNavigate = (e:React.MouseEvent) => {
         if ((e.target as HTMLElement).closest(".interaction")) return;
-        navigate(`/posts/${post.id}`);
+        navigate(`/posts/${data.slug}`);
     }
 
 
