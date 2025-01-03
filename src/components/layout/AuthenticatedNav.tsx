@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
 ]
 
 const AuthenticatedNav = () => {
-    
+
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = React.useState(0);
@@ -61,7 +61,7 @@ const AuthenticatedNav = () => {
                             <motion.div
                                 className=""
                                 animate={{ opacity: isCollapsed ? 0 : 1 }}
-                                transition={{ duration: .2}}
+                                transition={{ duration: .2 }}
 
                             >
 
@@ -81,9 +81,11 @@ const AuthenticatedNav = () => {
                         <nav className="grid gap-2">
                             <TooltipProvider delayDuration={0}>
                                 {navItems.map((item, index) => {
+
                                     const Icon = item.icon
                                     const isActive = activeTab === index
                                     return (
+                                        item.label !== 'Create' &&
                                         <Tooltip key={index}>
                                             <TooltipTrigger asChild>
                                                 <a
@@ -120,6 +122,7 @@ const AuthenticatedNav = () => {
                                             </TooltipContent>
                                         </Tooltip>
                                     )
+
                                 })}
                             </TooltipProvider>
                         </nav>
@@ -173,15 +176,15 @@ const AuthenticatedNav = () => {
 
                             </a>
                         ) : (
-                                <div key={index} className="relative flex h-full w-full flex-col items-center justify-center gap-1">
-                                    <button
-                                        onClick={() => navigate('/posts/create')}
-                                        className='p-2 rounded-lg bg-zinc-800 text-white border border-neutral-600 shadow-sm dark:bg-neutral-800  dark:text-white dark:border dark:border-neutral-600 active:scale-95 transition-transform'
-                                    >
-                                        <Icon className="h-5 w-5" />
-                                    </button>
-                                </div>
-                                
+                            <div key={index} className="relative flex h-full w-full flex-col items-center justify-center gap-1">
+                                <button
+                                    onClick={() => navigate('/posts/create')}
+                                    className='p-2 rounded-lg bg-zinc-800 text-white border border-neutral-600 shadow-sm dark:bg-neutral-800  dark:text-white dark:border dark:border-neutral-600 active:scale-95 transition-transform'
+                                >
+                                    <Icon className="h-5 w-5" />
+                                </button>
+                            </div>
+
                         )
 
                     )
