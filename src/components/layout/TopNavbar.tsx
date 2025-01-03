@@ -47,18 +47,25 @@ const TopNavbar = () => {
 
 
   return isLoggedIn ? (
-    <div className="lg:px-8 flex justify-between items-center px-5 py-3 shadow dark:shadow border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+    <div className="lg:px-8 flex md:w-full justify-between items-center px-5 py-3 shadow dark:shadow border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+      <div className='flex md:hidden items-center gap-2'>
+        <img src={brandIcon} alt="brand icon" width={50} height={50} />
+        <span>Chate Set</span>
+      </div>
+
+      <div className='md:w-full flex items-center gap-6 md:justify-between'>
         <Classic
           toggled={isDarkMode}
           toggle={darkModeHandle}
           className="outline-none text-xl"
           placeholder={undefined}
-      />
-      <div className="flex gap-5">
-        <div className="hidden md:block">
-          <PostCreateButton />
+        />
+        <div className="flex gap-5">
+          <div className="hidden md:block">
+            <PostCreateButton />
           </div>
-        <ProfileDropdown />
+          <ProfileDropdown />
+        </div>
       </div>
 
     </div>

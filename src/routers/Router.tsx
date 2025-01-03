@@ -12,6 +12,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import { PostCreate } from "@/pages/PostCreate";
 
 
 const router = createBrowserRouter([
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "posts/create",
-                        element: <h1>Create Post</h1>
+                        element: <PostCreate />,
                     },
                     {
                         path: "/explore",
