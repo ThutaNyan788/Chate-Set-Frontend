@@ -51,9 +51,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
         navigate(`/posts/${data.slug}`);
     }
 
-
-
-
     return (
         <>
             <Card onClick={handleNavigate} className="w-full max-h-[450px] bg-white shadow-none hover:shadow-lg dark:shadow-lg dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
@@ -117,7 +114,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
 
                     </div>
                     <h2 className="line-clamp-2 text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{data.title}</h2>
-                    <div className="flex flex-wrap gap-2 overflow-hidden h-6">
+                    <div className="flex flex-wrap gap-2 overflow-hidden h-7">
                         {data.tags.map((tag) => (
                             <Link to="/" key={tag}>
                                 <Badge
