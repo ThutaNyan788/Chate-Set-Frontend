@@ -1,62 +1,24 @@
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import TestImage from "@/assets/javascript.png"
+import { usePostDetail } from "@/hooks/usePostDetail";
+import { useParams } from "react-router-dom";
+import PostContent from "./PostContent";
 
 export default function PostDetail() {
+
+
+  const { slug } = useParams<{ slug: string }>();
+
+  const { data: post, error, isLoading } = usePostDetail(slug || "");
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">The Future of Web Development: A Deep Dive into Next.js</h1>
-        <div className="flex items-center space-x-4">
-          <Avatar>
-            <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Author" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold">John Doe</p>
-            <p className="text-sm text-gray-500">Published on May 15, 2023 · 10 min read</p>
-          </div>
-        </div>
-      </header>
-
-      <img
-        src={TestImage}
-        alt="Blog post cover image"
-        className="w-full h-[300]  rounded-lg mb-8 "
-      />
-
-      <article className="text-lg leading-relaxed space-y-6">
-        <p>
-          Next.js has been making waves in the web development community, and for good reason.
-          As we look towards the future of web development, it's clear that frameworks like Next.js
-          will play a crucial role in shaping how we build and deploy web applications.
-        </p>
-
-        <h2 className="text-2xl font-bold mt-8 mb-4">The Rise of Server-Side Rendering</h2>
-        <p>
-          One of the key features that sets Next.js apart is its robust support for server-side
-          rendering (SSR). This approach offers significant benefits in terms of performance and SEO,
-          making it an attractive option for developers looking to build fast, search-engine-friendly
-          applications.
-        </p>
-
-        <h2 className="text-2xl font-bold mt-8 mb-4">Static Site Generation: The Best of Both Worlds</h2>
-        <p>
-          Next.js also excels in static site generation (SSG), allowing developers to create
-          lightning-fast websites that can be easily deployed to content delivery networks. This
-          hybrid approach combines the benefits of static sites with the dynamic capabilities of
-          server-side rendering, offering a flexible solution for a wide range of projects.
-        </p>
-
-        <h2 className="text-2xl font-bold mt-8 mb-4">The Future is Bright</h2>
-        <p>
-          As we continue to push the boundaries of what's possible on the web, frameworks like
-          Next.js will undoubtedly play a central role in shaping the future of web development.
-          With its powerful features and growing ecosystem, Next.js is well-positioned to become
-          the go-to choice for developers looking to build modern, performant web applications.
-        </p>
-      </article>
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error fetching post</div>}
+      {post && (
+        <PostContent post={post} />
+      )}
+      
 
 
       <div className="mt-8 flex justify-between items-center">

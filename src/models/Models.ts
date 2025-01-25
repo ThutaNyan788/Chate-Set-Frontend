@@ -3,9 +3,10 @@ export interface PostData {
   type : string;
   id: number;
   attributes: {
+    category: string;
     title: string;
     slug: string;
-    img_url: string;
+    thumbnail: string;
     tags: [];
     content: string;
     read_time: number;
