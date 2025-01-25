@@ -16,28 +16,6 @@ const PostContent: React.FC<PostContentProps> = ({ post }) => {
     // const is_liked = post.relationships.likes.is_liked;
     // const is_bookmarked = post.attributes.is_bookmarked;
 
-    const mdContent = `
-# Hello, World!
-
-This is a **Markdown** example.
-
-- List item 1
-- List item 2
-- List item 3
-
-> Testing
-
-| Column 1 | Column 2 |
-|----------|----------|
-| Value 1  | Value 2  |
-
-\`\`\`javascript
-console.log('Code block!');
-\`\`\`
-
-[Visit Google](https://www.google.com)
-`;
-
     const getImageUrl = (thumbnail: string) => {
         if (thumbnail.startsWith('http')) {
             return thumbnail;
@@ -46,7 +24,7 @@ console.log('Code block!');
     }
 
     return (
-        <div>
+        <div className=' border-b pb-4 mb-3'>
             <header className="mb-8">
                 <h1 className="text-4xl font-bold mb-4">{data.title}</h1>
                 <div className="flex items-center space-x-4">
