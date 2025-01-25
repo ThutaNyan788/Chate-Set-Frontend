@@ -15,7 +15,6 @@ import {
     DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
 import { MoreVertical, Share2, Eye, ThumbsDown, Clock, UserPlus, Ban, Flag } from 'lucide-react'
-import TestImage from "@/assets/javascript.png"
 import CopyLinkButton from "./CopyLinkButton"
 import { useState } from "react"
 import {
@@ -43,12 +42,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
     const like_count = post.relationships.likes.likes_count;
     const is_liked = post.relationships.likes.is_liked;
     const is_bookmarked = post.attributes.is_bookmarked;
-    const [open, setOpen] = useState(false);
+    // const [openComments, setOpenComments] = useState(false); // Dialog comments for later implementation
 
     const navigate = useNavigate();
     const handleNavigate = (e: React.MouseEvent) => {
         if ((e.target as HTMLElement).closest(".interaction")) return;
         navigate(`/posts/${data.slug}`);
+    }
+
+    const getImageUrl = (thumbnail: string) => {
+        if (thumbnail.startsWith('http')) {
+            return thumbnail;
+        }
+        return import.meta.env.VITE_API_STORAGE_URL + thumbnail;
     }
 
     return (
@@ -89,20 +95,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                                         <span>Hide</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <ThumbsDown className="mr-2 h-4 w-4" />
-                                        <span>Downvote</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <Clock className="mr-2 h-4 w-4" />
-                                        <span>Read it later</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
                                         <UserPlus className="mr-2 h-4 w-4" />
                                         <span>Follow {author.name}</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-red-600 dark:text-red-400">
-                                        <Ban className="mr-2 h-4 w-4" />
-                                        <span>Not interested in this</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="text-red-600 dark:text-red-400">
                                         <Flag className="mr-2 h-4 w-4" />
@@ -136,7 +130,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                         className="w-full h-36 md:h-40 object-cover"
                     /> */}
                         <img
-                            src={TestImage}
+                            src={getImageUrl(data.thumbnail)}
                             alt="Post cover"
                             className="w-full h-36 md:h-40 object-cover"
                         />
@@ -167,7 +161,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                             <span className="text-xs md:text-sm">{like_count}</span>
                         </Button>
 
-                        <Dialog open={open} onOpenChange={setOpen}>
+                        {/* Dialog comments for later implementation */}
+                        {/* <Dialog open={openComments} onOpenChange={setOpenComments}>
                             <DialogTrigger asChild>
                                 <Button
                                     variant="ghost"
@@ -190,8 +185,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                                     <Comments comments={mockComments} />
                                 </ScrollArea>
                             </DialogContent>
-                        </Dialog>
+                        </Dialog> */}
 
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        >
+                            <MessageCircle className="mr-1 h-4 w-4" />
+                            <span className="text-xs md:text-sm">3</span>
+                        </Button>
 
 
                         <Button
