@@ -11,7 +11,7 @@ import { Link } from "react-router-dom"
 const PostSkeleton: React.FC = () => {
 
     return (
-        <Card className=" w-full bg-white shadow dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
+        <Card className=" w-full bg-white shadow dark:bg-gray-900 dark:text-white border overflow-hidden">
             <CardHeader className="space-y-4">
                 <div className="flex items-center mt-4 animate-pulse">
                     <svg className="w-10 h-10 me-3 text-gray-200 dark:text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">

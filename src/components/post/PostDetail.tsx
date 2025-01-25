@@ -12,7 +12,7 @@ export default function PostDetail() {
   const { data: post, error, isLoading } = usePostDetail(slug || "");
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 md:px-8 py-8 bg-white dark:bg-transparent">
       {isLoading && <div>Loading...</div>}
       {error && <div>Error fetching post</div>}
       {post && (

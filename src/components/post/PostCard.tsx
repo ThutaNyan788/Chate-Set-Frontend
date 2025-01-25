@@ -59,7 +59,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
 
     return (
         <>
-            <Card onClick={handleNavigate} className="w-full max-h-[450px] bg-white shadow-none hover:shadow-lg dark:shadow-lg dark:bg-gray-900 dark:text-white border dark:border-gray-700 overflow-hidden">
+            <Card onClick={handleNavigate} className="w-full max-h-[450px] bg-white shadow-none hover:shadow-lg dark:shadow-lg dark:bg-gray-900 dark:text-white border dark:hover:border-gray-600 overflow-hidden">
                 <CardHeader className="space-y-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-3">
