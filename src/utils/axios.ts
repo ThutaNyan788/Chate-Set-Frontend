@@ -1,9 +1,11 @@
 // axiosInstance.js
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 // Create an Axios instance with base URL
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1'
+  baseURL: apiUrl
 });
 
 // Add a request interceptor

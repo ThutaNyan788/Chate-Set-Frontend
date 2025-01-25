@@ -16,6 +16,13 @@ const PostContent: React.FC<PostContentProps> = ({ post }) => {
     const is_liked = post.relationships.likes.is_liked;
     const is_bookmarked = post.attributes.is_bookmarked;
 
+    const getImageUrl = (thumbnail: string) => {
+        if (thumbnail.startsWith('http')) {
+            return thumbnail;
+        }
+        return import.meta.env.VITE_API_STORAGE_URL + thumbnail;
+    }
+
     return (
         <div>
             <header className="mb-8">
@@ -33,7 +40,7 @@ const PostContent: React.FC<PostContentProps> = ({ post }) => {
             </header>
 
             <img
-                src={TestImage}
+                src={getImageUrl(data.thumbnail)}
                 alt="Blog post cover image"
                 className="w-full h-[300]  rounded-lg mb-8 "
             />
