@@ -28,13 +28,44 @@ export interface PostData {
     likes: {
       'likes_count': number;
       'is_liked': boolean;
-      }
+    };
+    comments: {
+      data: CommentData[];
+      links: {
+        self: string;
+        pagination: {
+          current_page: number;
+          total_pages: number;
+          per_page: number;
+          total: number;
+          next_page_url: string | null;
+          prev_page_url: string | null;
+        };
+      };
+    }
   };
   includes: {
     author: UserData;
   };
   links: {
     self: string;
+  };
+}
+
+
+// Interface for a single comment
+export interface CommentData {
+  type: string;
+  id: number;
+  attributes: {
+    id: number;
+    body: string;
+    user: UserData;
+    likes_count: number;
+    is_liked: boolean;
+    created_at: string;
+    updated_at: string;
+    replies: CommentData[];
   };
 }
 
