@@ -75,13 +75,13 @@ export interface UserData {
   attributes: {
     name: string;
     email: string;
-    role: string;
-    profile_photo_path: string;
-    emailVerified_at: string;
-    created_at: string;
-    updated_at: string;
+    role?: string;
+    profile_photo_path: string | null;
+    emailVerified_at?: string;
+    created_at?: string;
+    updated_at?: string;
   };
-  includes: {
+  includes?: {
     post: PostData;
   };
   links: {

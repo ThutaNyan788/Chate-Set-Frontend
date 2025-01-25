@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { usePostDetail } from "@/hooks/usePostDetail";
 import { useParams } from "react-router-dom";
 import PostContent from "./PostContent";
+import CommentSection from "../comment/CommentSection";
 
 export default function PostDetail() {
 
@@ -16,10 +17,11 @@ export default function PostDetail() {
       {isLoading && <div>Loading...</div>}
       {error && <div>Error fetching post</div>}
       {post && (
-        <PostContent post={post} />
+        <div>
+          <PostContent post={post} />
+          <CommentSection />
+        </div>
       )}
-      
-
 
       <div className="mt-8 flex justify-between items-center">
         <div className="flex space-x-4">
