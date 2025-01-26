@@ -19,7 +19,7 @@ export default function PostDetail() {
       {post && (
         <div>
           <PostContent post={post} />
-          <CommentSection />
+          <CommentSection initialComments={post.relationships.comments.data} />
         </div>
       )}
 

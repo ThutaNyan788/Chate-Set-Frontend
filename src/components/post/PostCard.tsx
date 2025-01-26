@@ -39,7 +39,8 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggle }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
-    const like_count = post.relationships.likes.likes_count;
+    const likes_count = post.relationships.likes.likes_count;
+    const comments_count = post.relationships.comments_count;
     const is_liked = post.relationships.likes.is_liked;
     const is_bookmarked = post.attributes.is_bookmarked;
     // const [openComments, setOpenComments] = useState(false); // Dialog comments for later implementation
@@ -158,7 +159,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                             >
                                 <Heart className={`mr-1 h-4 w-4 cursor-pointer ${is_liked ? "fill-current text-red-500" : ""}`} />
                             </motion.div>
-                            <span className="text-xs md:text-sm">{like_count}</span>
+                            <span className="text-xs md:text-sm">{likes_count}</span>
                         </Button>
 
                         {/* Dialog comments for later implementation */}
@@ -193,7 +194,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                             className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                         >
                             <MessageCircle className="mr-1 h-4 w-4" />
-                            <span className="text-xs md:text-sm">3</span>
+                            <span className="text-xs md:text-sm">{comments_count}</span>
                         </Button>
 
 

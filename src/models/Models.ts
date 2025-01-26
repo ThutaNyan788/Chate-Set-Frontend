@@ -42,7 +42,8 @@ export interface PostData {
           prev_page_url: string | null;
         };
       };
-    }
+    };
+    comments_count: number;
   };
   includes: {
     author: UserData;

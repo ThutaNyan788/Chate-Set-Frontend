@@ -5,191 +5,23 @@ import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
 import { CommentData } from "@/models/Models"
 
+interface CommentProps {
+    initialComments: CommentData[];
+    links: {
+        self: string;
+        pagination: {
+            current_page: number;
+            total_pages: number;
+            per_page: number;
+            total: number;
+            next_page_url: string | null;
+            prev_page_url: string | null;
+        };
+    };
+}
 
-
-// Extended mock data with more varied comments
-const initialComments: CommentData[] = [
-    {
-        "type": "comment",
-        "id": 1,
-        "attributes": {
-            "id": 1,
-            "body": "This is a comment on the post",
-            "user": {
-                "type": "user",
-                "id": 11,
-                "attributes": {
-                    "name": "Test User",
-                    "email": "test@example.com",
-                    "profile_photo_path": null
-                },
-                "links": {
-                    "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                }
-            },
-            "likes_count": 1,
-            "is_liked": false,
-            "created_at": "2025-01-25 09:19:55",
-            "updated_at": "2025-01-25 09:19:55",
-            "replies": [
-                {
-                    "type": "comment",
-                    "id": 4,
-                    "attributes": {
-                        "id": 4,
-                        "body": "This is a comment on the post",
-                        "user": {
-                            "type": "user",
-                            "id": 11,
-                            "attributes": {
-                                "name": "Test User",
-                                "email": "test@example.com",
-                                "profile_photo_path": null
-                            },
-                            "links": {
-                                "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                            }
-                        },
-                        "likes_count": 0,
-                        "is_liked": false,
-                        "created_at": "2025-01-25 09:24:41",
-                        "updated_at": "2025-01-25 09:24:41",
-                        "replies": [
-                            {
-                                "type": "comment",
-                                "id": 6,
-                                "attributes": {
-                                    "id": 6,
-                                    "body": "This is a comment on the post",
-                                    "user": {
-                                        "type": "user",
-                                        "id": 11,
-                                        "attributes": {
-                                            "name": "Test User",
-                                            "email": "test@example.com",
-                                            "profile_photo_path": null
-                                        },
-                                        "links": {
-                                            "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                                        }
-                                    },
-                                    "likes_count": 0,
-                                    "is_liked": false,
-                                    "created_at": "2025-01-25 09:28:14",
-                                    "updated_at": "2025-01-25 09:28:14",
-                                    "replies": []
-                                }
-                            },
-                            {
-                                "type": "comment",
-                                "id": 7,
-                                "attributes": {
-                                    "id": 7,
-                                    "body": "This is a comment on the post",
-                                    "user": {
-                                        "type": "user",
-                                        "id": 11,
-                                        "attributes": {
-                                            "name": "Test User",
-                                            "email": "test@example.com",
-                                            "profile_photo_path": null
-                                        },
-                                        "links": {
-                                            "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                                        }
-                                    },
-                                    "likes_count": 0,
-                                    "is_liked": false,
-                                    "created_at": "2025-01-25 13:32:56",
-                                    "updated_at": "2025-01-25 13:32:56",
-                                    "replies": []
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "type": "comment",
-        "id": 2,
-        "attributes": {
-            "id": 2,
-            "body": "This is a comment on the post",
-            "user": {
-                "type": "user",
-                "id": 11,
-                "attributes": {
-                    "name": "Test User",
-                    "email": "test@example.com",
-                    "profile_photo_path": null
-                },
-                "links": {
-                    "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                }
-            },
-            "likes_count": 0,
-            "is_liked": false,
-            "created_at": "2025-01-25 09:20:21",
-            "updated_at": "2025-01-25 09:20:21",
-            "replies": [
-                {
-                    "type": "comment",
-                    "id": 5,
-                    "attributes": {
-                        "id": 5,
-                        "body": "This is a comment on the post",
-                        "user": {
-                            "type": "user",
-                            "id": 11,
-                            "attributes": {
-                                "name": "Test User",
-                                "email": "test@example.com",
-                                "profile_photo_path": null
-                            },
-                            "links": {
-                                "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                            }
-                        },
-                        "likes_count": 0,
-                        "is_liked": false,
-                        "created_at": "2025-01-25 09:24:52",
-                        "updated_at": "2025-01-25 09:24:52",
-                        "replies": []
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "type": "comment",
-        "id": 3,
-        "attributes": {
-            "id": 3,
-            "body": "This is a comment on the post",
-            "user": {
-                "type": "user",
-                "id": 11,
-                "attributes": {
-                    "name": "Test User",
-                    "email": "test@example.com",
-                    "profile_photo_path": null
-                },
-                "links": {
-                    "self": "http://127.0.0.1:8000/api/v1/authors/11"
-                }
-            },
-            "likes_count": 0,
-            "is_liked": false,
-            "created_at": "2025-01-25 09:20:30",
-            "updated_at": "2025-01-25 09:20:30",
-            "replies": []
-        }
-    }
-];
-
-export default function CommentSection() {
+const CommentSection: React.FC<CommentProps> = ({ initialComments }) => {
+    console.log(initialComments);
     const [comments, setComments] = useState(initialComments)
 
     const handleAddComment = (content: string) => {
@@ -319,11 +151,11 @@ export default function CommentSection() {
     return (
         <div className="space-y-6 max-w-3xl mx-auto">
             <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-primary">Discussion ({comments.length})</h2>
+                <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.length || '0'})</h2>
                 <CommentInput onSubmit={handleAddComment} />
             </div>
             <div className="space-y-4">
-                {comments.map((comment) => (
+                {comments?.map((comment) => (
                     <Comment
                         key={comment.id}
                         comment={comment}
@@ -336,4 +168,6 @@ export default function CommentSection() {
         </div>
     )
 }
+
+export default CommentSection
 
