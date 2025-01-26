@@ -42,7 +42,8 @@ export interface PostData {
           prev_page_url: string | null;
         };
       };
-    }
+    };
+    comments_count: number;
   };
   includes: {
     author: UserData;
@@ -67,6 +68,13 @@ export interface CommentData {
     updated_at: string;
     replies: CommentData[];
   };
+}
+
+export interface CommentForm {
+  id: number;
+  body: string;
+  base_id?: number;
+  parent_id?: number;
 }
 
 export interface UserData {
