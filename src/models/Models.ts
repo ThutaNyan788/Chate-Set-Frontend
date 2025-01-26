@@ -70,6 +70,13 @@ export interface CommentData {
   };
 }
 
+export interface CommentForm {
+  id: number;
+  body: string;
+  base_id?: number;
+  parent_id?: number;
+}
+
 export interface UserData {
   type : string;
   id: number;

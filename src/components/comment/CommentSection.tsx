@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
-import { CommentData } from "@/models/Models"
+import { CommentData, CommentForm } from "@/models/Models"
+import axios from "@/utils/axios"
 
 interface CommentProps {
     initialComments: CommentData[];
@@ -21,36 +22,20 @@ interface CommentProps {
 }
 
 const CommentSection: React.FC<CommentProps> = ({ initialComments }) => {
-    console.log(initialComments);
-    const [comments, setComments] = useState(initialComments)
+    const [comments, setComments] = useState(initialComments);
 
     const handleAddComment = (content: string) => {
-        const newComment: CommentData = {
-            type: "comment",
-            id: Date.now(),
-            attributes: {
-                id: Date.now(),
-                body: content,
-                user: {
-                    type: "user",
-                    id: 1,
-                    attributes: {
-                        name: "You",
-                        email: "you@example.com",
-                        profile_photo_path: '',
-                    },
-                    links: {
-                        self: "http://127.0.0.1:8000/api/v1/authors/1",
-                    },
-                },
-                likes_count: 0,
-                is_liked: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                replies: [],
-            },
-        }
-        setComments([newComment, ...comments])
+        const commentData: CommentForm = {
+            id: 1,
+            body: content
+        };
+
+        axios.post(`/user/comments/posts/${commentData.id}/store`, commentData, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
     }
 
     const handleEdit = (id: number, newContent: string) => {
