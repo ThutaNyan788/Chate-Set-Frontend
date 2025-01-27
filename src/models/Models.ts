@@ -61,7 +61,11 @@ export interface CommentData {
   attributes: {
     id: number;
     body: string;
-    user: UserData;
+    user: {
+      id: number;
+      name: string;
+      profile_photo_path: string | null;
+    }
     likes_count: number;
     is_liked: boolean;
     created_at: string;
