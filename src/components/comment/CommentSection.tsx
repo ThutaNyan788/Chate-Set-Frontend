@@ -5,6 +5,8 @@ import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
 import { CommentData, CommentPayload } from "@/models/Models"
 import { useCommentMutation } from "@/hooks/useCommentMutation"
+import {  useQueryClient } from "@tanstack/react-query";
+
 
 interface CurrentData {
     id: number;
@@ -33,10 +35,14 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments, field, curren
 
     const [comments, setComments] = useState<CommentData[]>(initialComments);
 
+    const queryClient = useQueryClient();
+    const cacheKey = [field, current.id, 'comments'];
+    const cachedComments = queryClient.getQueriesData<CommentData[]>({ queryKey: cacheKey });
+
     // Sync state with initialComments when it changes
     useEffect(() => {
         setComments(initialComments);
-    }, [initialComments]);
+    }, [initialComments,cachedComments]);
 
     const { mutate: addComment, isLoading } = useCommentMutation(field, current.id);
 
@@ -129,12 +135,13 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments, field, curren
         <div className="space-y-6 max-w-3xl mx-auto">
             <div>
                 <div className="space-y-4 mb-4">
-                    <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.length || '0'})</h2>
                     <CommentInput onSubmit={handleAddComment} />
                 </div>
                 {isCommentLoading && <div>Loading comments...</div>}
                 {!isCommentLoading &&
                     <div className="space-y-4">
+                        <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.length || '0'})</h2>
+
                         {comments && comments?.map((comment) => (
                             <Comment
                                 key={comment.id}
