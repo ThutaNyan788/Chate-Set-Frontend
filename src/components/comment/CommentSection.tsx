@@ -1,14 +1,27 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
-import { CommentData, CommentForm } from "@/models/Models"
-import axios from "@/utils/axios"
+import { CommentData, CommentPayload } from "@/models/Models"
+import { useCommentMutation } from "@/hooks/useCommentMutation"
+import {  useQueryClient } from "@tanstack/react-query";
+
+
+interface CurrentData {
+    id: number;
+    relationships: {
+        comments_count: number;
+    }
+    // add other properties if needed
+}
 
 interface CommentProps {
+    field: string;
+    current: CurrentData;
     initialComments: CommentData[];
-    links: {
+    isCommentLoading?: boolean;
+    links?: {
         self: string;
         pagination: {
             current_page: number;
@@ -21,21 +34,28 @@ interface CommentProps {
     };
 }
 
-const CommentSection: React.FC<CommentProps> = ({ initialComments }) => {
-    const [comments, setComments] = useState(initialComments);
+const CommentSection: React.FC<CommentProps> = ({ initialComments, field, current, isCommentLoading }) => {
+
+    const [comments, setComments] = useState<CommentData[]>(initialComments);
+
+
+    // Sync state with initialComments when it changes
+    useEffect(() => {
+        setComments(initialComments);
+    }, [initialComments]);
+
+    const { mutate: addComment, isLoading } = useCommentMutation(field, current.id);
 
     const handleAddComment = (content: string) => {
-        const commentData: CommentForm = {
-            id: 1,
-            body: content
-        };
-
-        axios.post(`/user/comments/posts/${commentData.id}/store`, commentData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+        const commentPayload: CommentPayload = {
+            data: {
+                attributes: {
+                    body: content
+                }
             }
-        });
-        
+        }
+
+        addComment(commentPayload);
     }
 
     const handleEdit = (id: number, newContent: string) => {
@@ -85,31 +105,9 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments }) => {
         const addReply = (comments: CommentData[]): CommentData[] => {
             return comments.map((comment) => {
                 if (comment.id === parentId) {
-                    const newReply: CommentData = {
-                        type: "comment",
-                        id: Date.now(),
-                        attributes: {
-                            id: Date.now(),
-                            body: content,
-                            user: {
-                                type: "user",
-                                id: 1,
-                                attributes: {
-                                    name: "You",
-                                    email: "you@example.com",
-                                    profile_photo_path: null,
-                                },
-                                links: {
-                                    self: "http://127.0.0.1:8000/api/v1/authors/1",
-                                },
-                            },
-                            likes_count: 0,
-                            is_liked: false,
-                            created_at: new Date().toISOString(),
-                            updated_at: new Date().toISOString(),
-                            replies: [],
-                        },
-                    }
+                    // const newReply: CommentData = {
+
+                    // }
                     return {
                         ...comment,
                         attributes: {
@@ -135,21 +133,30 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments }) => {
 
     return (
         <div className="space-y-6 max-w-3xl mx-auto">
-            <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.length || '0'})</h2>
-                <CommentInput onSubmit={handleAddComment} />
+            <div>
+                <div className="space-y-4 mb-4">
+                    <CommentInput onSubmit={handleAddComment} />
+                </div>
+                {isCommentLoading && <div>Loading comments...</div>}
+                {!isCommentLoading &&
+                    <div className="space-y-4">
+                        <h2 className="text-2xl font-bold text-primary">Discussion ({current.relationships.comments_count || '0'})</h2>
+
+                        {comments && comments?.map((comment) => (
+                            <Comment
+                                key={comment.id}
+                                comment={comment}
+                                onDelete={handleDelete}
+                                onEdit={handleEdit}
+                                onReply={handleReply}
+                            />
+                        ))}
+                    </div>
+                }
             </div>
-            <div className="space-y-4">
-                {comments?.map((comment) => (
-                    <Comment
-                        key={comment.id}
-                        comment={comment}
-                        onDelete={handleDelete}
-                        onEdit={handleEdit}
-                        onReply={handleReply}
-                    />
-                ))}
-            </div>
+
+
+
         </div>
     )
 }
