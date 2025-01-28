@@ -31,8 +31,7 @@ export default function PostDetail() {
       {post && (
         <div>
           <PostContent post={post} />
-          <CommentSection field="posts" current={post} initialComments={comments || []} isCommentLoading={isCommentLoading} />
-          <div className="mt-8 flex justify-between items-center">
+          <div className="mt-4 mb-8 flex justify-between items-center">
             <div className="flex space-x-4">
               <Button variant="outline">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
@@ -49,6 +48,8 @@ export default function PostDetail() {
             </div>
 
           </div>
+          <CommentSection field="posts" current={post} initialComments={comments || []} isCommentLoading={isCommentLoading} />
+          
         </div>
       )}
 

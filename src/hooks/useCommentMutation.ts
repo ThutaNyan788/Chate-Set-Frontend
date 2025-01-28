@@ -3,7 +3,7 @@ import axios from "@/utils/axios";
 import { CommentData, CommentPayload } from "@/models/Models";
 import { format } from 'date-fns';
 
-const storeComment = (field:string,id:number,payload:CommentPayload) => {
+const storeComment = (field: string, id: number, payload: CommentPayload) => {
     return axios.post(`/users/comments/${field}/${id}/store`, payload, {
         headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -32,7 +32,6 @@ export const useCommentMutation = (
 
       // Optimistically update comments
       queryClient.setQueryData(cacheKey, (old: CommentData[] = []) => [
-        ...old,
         {
           type: "comment",
           id: Date.now(), // Temporary ID
@@ -50,14 +49,16 @@ export const useCommentMutation = (
             created_at: format(new Date(), "MMM dd, yyyy"),
             updated_at: format(new Date(), "MMM dd, yyyy"),
           },
-        },
+          },
+        ...old,
+          
       ]);
 
       return { previousComments };
     },
 
     // Rollback on Error
-    onError: (error, newComment, context) => {
+      onError: (error, newComment, context) => {
       if (context?.previousComments) {
         queryClient.setQueryData([field, id, "comments"], context.previousComments);
       }

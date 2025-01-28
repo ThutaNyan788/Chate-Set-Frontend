@@ -10,6 +10,9 @@ import {  useQueryClient } from "@tanstack/react-query";
 
 interface CurrentData {
     id: number;
+    relationships: {
+        comments_count: number;
+    }
     // add other properties if needed
 }
 
@@ -35,14 +38,11 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments, field, curren
 
     const [comments, setComments] = useState<CommentData[]>(initialComments);
 
-    const queryClient = useQueryClient();
-    const cacheKey = [field, current.id, 'comments'];
-    const cachedComments = queryClient.getQueriesData<CommentData[]>({ queryKey: cacheKey });
 
     // Sync state with initialComments when it changes
     useEffect(() => {
         setComments(initialComments);
-    }, [initialComments,cachedComments]);
+    }, [initialComments]);
 
     const { mutate: addComment, isLoading } = useCommentMutation(field, current.id);
 
@@ -140,7 +140,7 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments, field, curren
                 {isCommentLoading && <div>Loading comments...</div>}
                 {!isCommentLoading &&
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.length || '0'})</h2>
+                        <h2 className="text-2xl font-bold text-primary">Discussion ({current.relationships.comments_count || '0'})</h2>
 
                         {comments && comments?.map((comment) => (
                             <Comment
