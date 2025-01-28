@@ -15,23 +15,10 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
+import { CommentData } from "@/models/Models"
 
 interface CommentProps {
-    comment: {
-        id: number
-        attributes: {
-            body: string
-            user: {
-                attributes: {
-                    name: string
-                }
-            }
-            likes_count: number
-            is_liked: boolean
-            created_at: string
-            replies: CommentProps["comment"][]
-        }
-    }
+    comment: CommentData;
     onDelete?: (id: number) => void
     onEdit?: (id: number, newContent: string) => void
     onReply?: (id: number, content: string) => void
