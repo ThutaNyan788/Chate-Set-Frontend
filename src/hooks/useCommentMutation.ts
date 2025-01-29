@@ -84,9 +84,9 @@ export const useCommentMutation = (
 
     // Invalidate on Success
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [field, id, "comments"],
-      });
+      // queryClient.invalidateQueries({
+      //   queryKey: [field, id, "comments"],
+      // });
     },
   });
 };

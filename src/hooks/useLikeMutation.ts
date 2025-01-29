@@ -67,7 +67,7 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
 
     // Invalidate the query to refetch the latest data
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: cacheKey });
+      // queryClient.invalidateQueries({ queryKey: cacheKey });
     },
   });
 };

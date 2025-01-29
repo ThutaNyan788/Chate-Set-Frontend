@@ -10,7 +10,7 @@ const Posts: React.FC = () => {
   const { data: posts, error: postError, isLoading: postLoading } = usePostsData();
   // Use the custom hook for liking a post
   const { mutate: toggleLike, error: likeError } = useLikeMutation('posts',['posts']);
-  const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation();
+  const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation('posts', ['posts']);
   
   const handleLikeToggle = async (postId: number) => {
     toggleLike(postId);
