@@ -27,6 +27,8 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Comments from "@/components/comment/Comments"
 import { mockComments } from './../comment/mockData';
+import LikeButton from "../ui/LikeButton"
+import BookmarkButton from "../ui/BookmarkButton"
 
 interface PostCardProps {
     post: PostData;
@@ -139,28 +141,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                 </CardContent>
                 <CardFooter>
                     <div className="flex space-x-2 md:space-x-4 interactions">
-                        <Button
-                            onClick={onLikeToggle}
-                            variant="ghost"
-                            size="sm"
-                            className={`interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg ${is_liked ? 'text-red-500' : ''}`}
-                        >
-                            <motion.div
-                                initial={{ scale: 1 }}
-                                animate={{
-                                    scale: is_liked ? 1.1 : 1, // Scale up when liked, scale down otherwise
-                                }}
-                                transition={{
-                                    type: "spring", // Use a spring animation for a bouncing effect
-                                    stiffness: 300,
-                                    damping: 20,
-                                }}
-
-                            >
-                                <Heart className={`mr-1 h-4 w-4 cursor-pointer ${is_liked ? "fill-current text-red-500" : ""}`} />
-                            </motion.div>
-                            <span className="text-xs md:text-sm">{likes_count}</span>
-                        </Button>
+                        <LikeButton isLiked={is_liked} likesCount={likes_count} onLikeToggle={onLikeToggle} />
 
                         {/* Dialog comments for later implementation */}
                         {/* <Dialog open={openComments} onOpenChange={setOpenComments}>
@@ -198,27 +179,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                         </Button>
 
 
-                        <Button
-                            onClick={onBookmarkToggle}
-                            variant="ghost"
-                            size="sm"
-                            className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
-                        >
-                            <motion.div
-                                initial={{ scale: 1 }}
-                                animate={{
-                                    scale: is_bookmarked ? 1.1 : 1, // Scale up when liked, scale down otherwise
-                                }}
-                                transition={{
-                                    type: "spring", // Use a spring animation for a bouncing effect
-                                    stiffness: 300,
-                                    damping: 20,
-                                }}
-
-                            >
-                                <Bookmark className={`mr-1 h-4 w-4 cursor-pointer ${is_bookmarked ? "fill-current text-brandColor" : ""}`} />
-                            </motion.div>
-                        </Button>
+                        <BookmarkButton isBookmarked={is_bookmarked} onBookmarkToggle={onBookmarkToggle} />
                         <CopyLinkButton link={'http://localhost:5173/posts/' + post.id} />
                     </div>
                 </CardFooter>
