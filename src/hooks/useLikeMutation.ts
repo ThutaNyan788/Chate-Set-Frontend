@@ -1,66 +1,73 @@
 import {  useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { PostData } from "@/models/Models";
+import { CommentCollection, PostCollection, PostData } from "@/models/Models";
 
-const toggleLikeApi = (postId: number) => {
-    return axios.post(`/posts/${postId}/like`, null, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-    });
-}
+const toggleLikeApi = (field: string, id: number) => {
+  return axios.post(`/${field}/${id}/like`, null, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+};
 
 
 
-export const useLikeMutation = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (postId: number) => toggleLikeApi(postId),
-        //handle optimistic updates
-        onMutate: async (postId: number) => {
-            await queryClient.cancelQueries({
-                queryKey: ["posts"],
-            });
-            const previousPosts = queryClient.getQueryData(["posts"]);
-            // Optimistically update the `is_liked` state and `likes_count`
-            queryClient.setQueryData(["posts"], (oldPosts: PostData[]) =>
-                oldPosts.map((post: PostData) =>
-                    post.id === postId
-                        ? {
-                            ...post,
-                            relationships: {
-                                ...post.relationships,
-                                likes: {
-                                    // Toggle `is_liked`
-                                    is_liked: !post.relationships.likes.is_liked,
-                                    // Update `likes_count`
-                                    likes_count: post.relationships.likes.is_liked
-                                        ? post.relationships.likes.likes_count - 1
-                                        : post.relationships.likes.likes_count + 1,
-                                       
-                                },
-                            },
-                        }
-                        : post
-                )
-            );
-            return { previousPosts };
-        },
+export const useLikeMutation = (field: string, cacheKey: any[]) => {
+  const queryClient = useQueryClient();
 
-        // Rollback if the mutation fails
-        onError: (err, postId, context) => {
-            // Ensure context is defined before accessing previousPosts
-            if (context?.previousPosts) {
-                queryClient.setQueryData(["posts"], context.previousPosts);
-            }
-        },
+  return useMutation({
+    mutationFn: (id: number) => toggleLikeApi(field, id),
 
-        // Refetch the posts after mutation success or failure
-        onSettled: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["posts"],
-            });
-        },
-    
-    })
-}
+    // Handle optimistic updates
+    onMutate: async (id: number) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: cacheKey });
+
+      const previousData = queryClient.getQueryData(cacheKey);
+
+      queryClient.setQueryData(cacheKey, (oldData: any | undefined) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: oldData.data.map((item: any) =>
+            item.id === id
+              ? {
+                  ...item,
+                  relationships: {
+                    ...item.relationships,
+                    likes: {
+                      data: {
+                        type: "likes",
+                        attributes: {
+                          // Toggle `liked`
+                          liked: !item.relationships.likes?.data?.attributes?.liked,
+                          // Update `count`
+                          count: item.relationships.likes?.data?.attributes?.liked
+                            ? item.relationships.likes.data.attributes.count - 1
+                            : item.relationships.likes.data.attributes.count + 1,
+                        },
+                      },
+                    },
+                  },
+                }
+              : item
+          ),
+        };
+      });
+
+      return { previousData };
+    },
+
+    // Rollback on error
+    onError: (err, id, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(cacheKey, context.previousData);
+      }
+    },
+
+    // Invalidate the query to refetch the latest data
+    onSettled: () => {
+      // queryClient.invalidateQueries({ queryKey: cacheKey });
+    },
+  });
+};

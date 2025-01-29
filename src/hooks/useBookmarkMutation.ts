@@ -1,9 +1,8 @@
 import {  useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { PostData } from "@/models/Models";
 
-const toggleBookmarkApi = (postId: number) => {
-    return axios.post(`/posts/${postId}/bookmark`, null, {
+const toggleBookmarkApi = (field: string, id: number) => {
+    return axios.post(`/${field}/${id}/bookmark`, null, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -12,47 +11,50 @@ const toggleBookmarkApi = (postId: number) => {
 
 
 
-export const useBookmarkMutation = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (postId: number) => toggleBookmarkApi(postId),
-        //handle optimistic updates
-        onMutate: async (postId: number) => {
-            await queryClient.cancelQueries({
-                queryKey: ["posts"],
-            });
-            const previousPosts = queryClient.getQueryData(["posts"]);
-            // Optimistically update the `is_bookmarked` state`
-            queryClient.setQueryData(["posts"], (oldPosts: PostData[]) =>
-                oldPosts.map((post: PostData) =>
-                    post.id === postId
-                        ? {
-                            ...post,
-                            attributes: {
-                                ...post.attributes,
-                                is_bookmarked: !post.attributes.is_bookmarked,
-                            }
-                        }
-                        : post
-                )
-            );
-            return { previousPosts };
-        },
+export const useBookmarkMutation = (field: string, cacheKey: any[]) => {
+  const queryClient = useQueryClient();
 
-        // Rollback if the mutation fails
-        onError: (err, postId, context) => {
-            // Ensure context is defined before accessing previousPosts
-            if (context?.previousPosts) {
-                queryClient.setQueryData(["posts"], context.previousPosts);
-            }
-        },
+  return useMutation({
+    mutationFn: (id: number) => toggleBookmarkApi(field, id),
 
-        // Refetch the posts after mutation success or failure
-        onSettled: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["posts"],
-            });
-        },
-    
-    })
-}
+    // Handle optimistic updates
+    onMutate: async (id: number) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: cacheKey });
+
+      const previousData = queryClient.getQueryData(cacheKey);
+
+      queryClient.setQueryData(cacheKey, (oldData: any | undefined) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: oldData.data.map((item: any) =>
+            item.id === id
+              ? {
+                  ...item,
+                  attributes: {
+                    ...item.attributes,
+                    is_bookmarked: !item.attributes.is_bookmarked, // Toggle bookmark status
+                  },
+                }
+              : item
+          ),
+        };
+      });
+
+      return { previousData };
+    },
+
+    // Rollback on error
+    onError: (err, id, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(cacheKey, context.previousData);
+      }
+    },
+
+    // Invalidate the query to refetch the latest data
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: cacheKey });
+    },
+  });
+};

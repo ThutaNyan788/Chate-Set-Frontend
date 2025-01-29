@@ -19,25 +19,23 @@ import { CommentData } from "@/models/Models"
 
 interface CommentProps {
     comment: CommentData;
+    onLikeToggle: (id: number) => void;
     onDelete?: (id: number) => void
     onEdit?: (id: number, newContent: string) => void
     onReply?: (id: number, content: string) => void
 }
 
-export function Comment({ comment, onDelete, onEdit, onReply }: CommentProps) {
+export function Comment({ comment, onLikeToggle, onDelete, onEdit, onReply }: CommentProps) {
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isLiked, setIsLiked] = useState(comment.attributes.is_liked)
-    const [likesCount, setLikesCount] = useState(comment.attributes.likes_count)
+    
     const [isEditing, setIsEditing] = useState(false)
     const [isReplying, setIsReplying] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-    const toggleReplies = () => setIsExpanded(!isExpanded)
+    const isLiked = comment.relationships.likes.data.attributes.liked;
+    const likes_count = comment.relationships.likes.data.attributes.count;
 
-    const handleLike = () => {
-        setIsLiked(!isLiked)
-        setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1))
-    }
+    const toggleReplies = () => setIsExpanded(!isExpanded)
 
     const handleEdit = (newContent: string) => {
         onEdit?.(comment.id, newContent)
@@ -60,13 +58,13 @@ export function Comment({ comment, onDelete, onEdit, onReply }: CommentProps) {
                 <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
                         <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium text-sm">
-                            {comment.attributes.user?.attributes?.name?.[0] || "A"}
+                            {comment.attributes.user?.name?.[0] || "A"}
                         </div>
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-foreground">
-                                {comment.attributes.user?.attributes?.name || "Anonymous"}
+                                {comment.attributes.user?.name || "Anonymous"}
                             </p>
                             <div className="flex items-center space-x-2">
                                 <span className="text-xs text-muted-foreground">
@@ -114,12 +112,12 @@ export function Comment({ comment, onDelete, onEdit, onReply }: CommentProps) {
                                 <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
                                 <div className="mt-2 flex items-center space-x-4">
                                     <button
-                                        onClick={handleLike}
+                                            onClick={()=>onLikeToggle(comment.id)}
                                         className={`flex items-center space-x-1 text-sm transition-colors duration-200 ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                                             }`}
                                     >
                                         <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
-                                        <span>{likesCount}</span>
+                                            <span>{likes_count}</span>
                                     </button>
                                     <button
                                         onClick={() => setIsReplying(!isReplying)}
