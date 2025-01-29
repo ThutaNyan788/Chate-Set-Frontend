@@ -1,8 +1,28 @@
+export interface PostCollection {
+  data: PostData[];
+  meta: MetaData;
+}
+
 // Interface for a single post
 export interface PostData {
   type : string;
   id: number;
-  attributes: {
+  attributes: PostAttributes;
+  relationships: {
+    author: AuthorRelationship;
+    likes: LikeRelationship;
+    comments: CommentRelationship;
+  };
+  includes: {
+    author: UserData;
+    comments?: CommentData[];
+  };
+  links: {
+    self: string;
+  };
+}
+
+export interface PostAttributes {
     category: string;
     title: string;
     slug: string;
@@ -15,64 +35,42 @@ export interface PostData {
     created_at: string;
     updated_at: string;
   };
-  relationships: {
-      author: {
-        data: {
-            type: string;
-            id: number
-      };
-      links: {
-        self: string;
-      };
-    };
-    likes: {
-      'likes_count': number;
-      'is_liked': boolean;
-    };
-    comments: {
-      data: CommentData[];
-      links: {
-        self: string;
-        pagination: {
-          current_page: number;
-          total_pages: number;
-          per_page: number;
-          total: number;
-          next_page_url: string | null;
-          prev_page_url: string | null;
-        };
-      };
-    };
-    comments_count: number;
-  };
-  includes: {
-    author: UserData;
-  };
-  links: {
-    self: string;
-  };
+
+//for collection of comments
+
+export interface CommentCollection {
+  data: CommentData[];
+  meta: MetaData;
 }
 
+export interface MetaData {
+  total_comments: number;
+  current_page: number;
+  per_page: number;
+  total_pages: number;
+}
 
 // Interface for a single comment
 export interface CommentData {
-  type: string;
-  id: number;
-  attributes: {
+    type: string;
     id: number;
-    body: string;
-    user: {
-      id: number;
-      name: string;
-      profile_photo_path: string | null;
-    }
-    likes_count: number;
-    is_liked: boolean;
-    created_at: string;
-    updated_at: string;
-    replies: CommentData[];
-  };
+  attributes: CommentAttributes,
+  relationships: {
+    likes: LikeRelationship
+  }
 }
+export interface CommentAttributes {
+      id: number;
+      body: string;
+      user: {
+        id: number;
+        name: string;
+        profile_photo_path: string | null;
+      }
+      created_at: string;
+      updated_at: string;
+      replies: CommentData[];
+    };
 
 export interface CommentPayload {
   data: {
@@ -83,6 +81,35 @@ export interface CommentPayload {
     }
   }
 }
+
+export interface LikeRelationship {
+   data: {
+      type: string;
+      attributes: {
+        count: number;
+        liked: boolean;
+     };
+   };
+}
+
+export interface CommentRelationship {
+  data: {
+    type: string;
+    attributes: {
+      count: number;
+    };
+  };
+};
+    
+export interface AuthorRelationship {
+    data: {
+        type: string;
+        id: number
+  };
+  links: {
+    self: string;
+  };
+};
 
 export interface UserData {
   type : string;

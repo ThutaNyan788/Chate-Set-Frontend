@@ -9,7 +9,7 @@ import { useBookmarkMutation } from '@/hooks/useBookmarkMutation';
 const Posts: React.FC = () => {
   const { data: posts, error: postError, isLoading: postLoading } = usePostsData();
   // Use the custom hook for liking a post
-  const { mutate: toggleLike, error: likeError } = useLikeMutation();
+  const { mutate: toggleLike, error: likeError } = useLikeMutation('posts',['posts']);
   const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation();
   
   const handleLikeToggle = async (postId: number) => {
@@ -35,7 +35,7 @@ const Posts: React.FC = () => {
         postError && <div>Error fetching posts</div>
       }
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts?.map((post, index) => (
+        {posts?.data?.map((post, index) => (
           <PostCard
             key={index}
             post={post}

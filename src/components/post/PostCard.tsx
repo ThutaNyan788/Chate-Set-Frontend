@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
-import { MoreVertical, Share2, Eye, ThumbsDown, Clock, UserPlus, Ban, Flag } from 'lucide-react'
+import { MoreVertical, Share2, Eye, UserPlus, Flag } from 'lucide-react'
 import CopyLinkButton from "./CopyLinkButton"
 import { useState } from "react"
 import {
@@ -39,9 +39,9 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggle }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
-    const likes_count = post.relationships.likes.likes_count;
-    const comments_count = post.relationships.comments_count;
-    const is_liked = post.relationships.likes.is_liked;
+    const likes_count = post.relationships.likes.data.attributes.count;
+    const comments_count = post.relationships.comments.data.attributes.count;
+    const is_liked = post.relationships.likes.data.attributes.liked;
     const is_bookmarked = post.attributes.is_bookmarked;
     // const [openComments, setOpenComments] = useState(false); // Dialog comments for later implementation
 
@@ -65,7 +65,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                     <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-3">
                             <Avatar className="h-12 w-12">
-                                <AvatarImage src={author.profile_photo_path} alt={author.name} />
+                                <AvatarImage src={author.profile_photo_path ?? ''} alt={author.name} />
                                 <AvatarFallback>{author.name[0]}</AvatarFallback>
                             </Avatar>
 

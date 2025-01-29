@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react"
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
-import { CommentData, CommentPayload } from "@/models/Models"
+import { CommentCollection, CommentData, CommentPayload } from "@/models/Models"
 import { useCommentMutation } from "@/hooks/useCommentMutation"
-import {  useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLikeMutation } from "@/hooks/useLikeMutation"
 
 
 interface CurrentData {
@@ -19,32 +20,20 @@ interface CurrentData {
 interface CommentProps {
     field: string;
     current: CurrentData;
-    initialComments: CommentData[];
+    comments: CommentCollection;
     isCommentLoading?: boolean;
-    links?: {
-        self: string;
-        pagination: {
-            current_page: number;
-            total_pages: number;
-            per_page: number;
-            total: number;
-            next_page_url: string | null;
-            prev_page_url: string | null;
-        };
-    };
+
 }
 
-const CommentSection: React.FC<CommentProps> = ({ initialComments, field, current, isCommentLoading }) => {
-
-    const [comments, setComments] = useState<CommentData[]>(initialComments);
-
-
-    // Sync state with initialComments when it changes
-    useEffect(() => {
-        setComments(initialComments);
-    }, [initialComments]);
+const CommentSection: React.FC<CommentProps> = ({ comments, field, current, isCommentLoading }) => {
 
     const { mutate: addComment, isLoading } = useCommentMutation(field, current.id);
+
+    const { mutate: toggleLike, error: likeError } = useLikeMutation("comments", ["posts", current.id, "comments"]);
+
+    const handleLikeToggle = async (id: number) => {
+        toggleLike(id);
+    };
 
     const handleAddComment = (content: string) => {
         const commentPayload: CommentPayload = {
@@ -140,12 +129,13 @@ const CommentSection: React.FC<CommentProps> = ({ initialComments, field, curren
                 {isCommentLoading && <div>Loading comments...</div>}
                 {!isCommentLoading &&
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-bold text-primary">Discussion ({current.relationships.comments_count || '0'})</h2>
+                        <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.meta.total_comments || '0'})</h2>
 
-                        {comments && comments?.map((comment) => (
+                        {comments && comments?.data.map((comment) => (
                             <Comment
                                 key={comment.id}
                                 comment={comment}
+                                onLikeToggle={() => handleLikeToggle(comment.id)}
                                 onDelete={handleDelete}
                                 onEdit={handleEdit}
                                 onReply={handleReply}

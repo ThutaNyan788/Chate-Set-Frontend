@@ -1,9 +1,9 @@
-import { PostData, ApiResponse } from '@/models/Models';
+import { PostCollection } from '@/models/Models';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from '@/utils/axios';
 
 
-type PostsResponse = ApiResponse<PostData[]>;
+type PostsResponse = PostCollection;
 
 const fetchPosts = async () => {
     const response = await axios.get<PostsResponse>('/posts', {
@@ -11,11 +11,11 @@ const fetchPosts = async () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     });
-    return response.data.data;
+    return response.data;
 }
 
-export const usePostsData = (): UseQueryResult<PostData[]> => {
-    return useQuery<PostData[]>({
+export const usePostsData = (): UseQueryResult<PostCollection> => {
+    return useQuery<PostCollection>({
         queryKey: ['posts'],
         queryFn: fetchPosts
     });
