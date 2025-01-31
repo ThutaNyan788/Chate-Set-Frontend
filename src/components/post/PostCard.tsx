@@ -32,13 +32,18 @@ import BookmarkButton from "../ui/BookmarkButton"
 
 interface PostCardProps {
     post: PostData;
+    innerRef?: React.Ref<HTMLParagraphElement>
     onLikeToggle: () => void;
     onBookmarkToggle: () => void;
+    isPostLoading?: boolean;
+    fetchNextPage: () => void;
+    hasNextPage?: boolean;
+    isFetchingNextPage?: boolean;
 }
 
 
 
-const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggle }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBookmarkToggle, isPostLoading, fetchNextPage, hasNextPage, isFetchingNextPage }) => {
     const data = post.attributes;
     const author = post.includes.author.attributes;
     const likes_count = post.relationships.likes.data.attributes.count;
@@ -61,7 +66,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
     }
 
     return (
-        <>
+        <div ref={innerRef}>
             <Card onClick={handleNavigate} className="w-full max-h-[450px] bg-white shadow-none hover:shadow-lg dark:shadow-lg dark:bg-gray-900 dark:text-white border dark:hover:border-gray-600 overflow-hidden">
                 <CardHeader className="space-y-4">
                     <div className="flex justify-between items-center">
@@ -112,10 +117,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                     </div>
                     <h2 className="line-clamp-2 text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{data.title}</h2>
                     <div className="flex flex-wrap gap-2 overflow-hidden h-7">
-                        {data.tags.map((tag) => (
-                            <Link to="/" key={tag}>
+                        {data.tags.map((tag, index) => (
+                            <Link to="/" key={`${tag}-${index}`}> 
                                 <Badge
-                                    key={tag}
+                                    key={`${tag}-${index}`}  
                                     variant="secondary"
                                     className="bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-[#1A2333] text-gray-700 dark:text-gray-300"
                                 >
@@ -142,6 +147,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
                 <CardFooter>
                     <div className="flex space-x-2 md:space-x-4 interactions">
                         <LikeButton isLiked={is_liked} likesCount={likes_count} onLikeToggle={onLikeToggle} />
+                        {/* <Button
+                            onClick={() => onLikeToggle()}
+                            variant="ghost"
+                            size="sm"
+                            className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
+                        >
+                            <Heart className={`mr-1 h-4 w-4 ${is_liked ? "fill-current text-red-500" : ""}`} />
+                            <span className="text-xs md:text-sm">{likes_count}</span>
+                        </Button> */}
+                        
 
                         {/* Dialog comments for later implementation */}
                         {/* <Dialog open={openComments} onOpenChange={setOpenComments}>
@@ -180,11 +195,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
 
 
                         <BookmarkButton isBookmarked={is_bookmarked} onBookmarkToggle={onBookmarkToggle} />
-                        <CopyLinkButton link={'http://localhost:5173/posts/' + post.id} />
+                        <CopyLinkButton link={'http://localhost:5173/posts/' + post.attributes.slug} />
                     </div>
                 </CardFooter>
             </Card>
-        </>
+        </div>
     )
 }
 

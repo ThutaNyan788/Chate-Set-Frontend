@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models"
 import { useCommentMutation } from "@/hooks/useCommentMutation"
-import { useQueryClient } from "@tanstack/react-query";
+import { InfiniteData } from "@tanstack/react-query";
 import { useLikeMutation } from "@/hooks/useLikeMutation"
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react"
 
 
 interface CurrentData {
@@ -20,16 +21,38 @@ interface CurrentData {
 interface CommentProps {
     field: string;
     current: CurrentData;
-    comments: CommentCollection;
+    comments: InfiniteData<CommentCollection> | undefined;
     isCommentLoading?: boolean;
+    fetchNextPage: () => void;
+    hasNextPage?: boolean;
+    isFetchingNextPage?: boolean;
 
 }
 
-const CommentSection: React.FC<CommentProps> = ({ comments, field, current, isCommentLoading }) => {
+const CommentSection: React.FC<CommentProps> = ({
+    comments,
+    field,
+    current,
+    isCommentLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+}) => {
 
-    const { mutate: addComment, isLoading } = useCommentMutation(field, current.id);
+    const { ref, inView } = useInView();
 
-    const { mutate: toggleLike, error: likeError } = useLikeMutation("comments", ["posts", current.id, "comments"]);
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    },[inView, hasNextPage,fetchNextPage]);
+
+    const allComments = comments?.pages.flatMap((page) => page.data) || [];
+    const totalComments = comments?.pages[0]?.meta.total_comments || 0;
+
+    const { mutate: addComment } = useCommentMutation(field, current.id);
+
+    const { mutate: toggleLike } = useLikeMutation("comments", ["posts", current.id, "comments"]);
 
     const handleLikeToggle = async (id: number) => {
         toggleLike(id);
@@ -94,9 +117,9 @@ const CommentSection: React.FC<CommentProps> = ({ comments, field, current, isCo
         const addReply = (comments: CommentData[]): CommentData[] => {
             return comments.map((comment) => {
                 if (comment.id === parentId) {
-                    // const newReply: CommentData = {
+                    const newReply: CommentData = {
 
-                    // }
+                    }
                     return {
                         ...comment,
                         attributes: {
@@ -120,6 +143,7 @@ const CommentSection: React.FC<CommentProps> = ({ comments, field, current, isCo
         setComments(addReply(comments))
     }
 
+    
     return (
         <div className="space-y-6 max-w-3xl mx-auto">
             <div>
@@ -128,19 +152,32 @@ const CommentSection: React.FC<CommentProps> = ({ comments, field, current, isCo
                 </div>
                 {isCommentLoading && <div>Loading comments...</div>}
                 {!isCommentLoading &&
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-bold text-primary">Discussion ({comments?.meta.total_comments || '0'})</h2>
+                    <div>
+                        <h2 className="text-2xl font-bold text-primary mb-4">Discussion ({totalComments})</h2>
+                        <div className="space-y-4 max-h-[65vh] overflow-y-scroll">
+                            {isCommentLoading ? (
+                                <p>Loading comments...</p>
+                            ) : allComments.length > 0 ? (
+                                    allComments.map((comment, index) => (
+                                    
+                                        <Comment
+                                            innerRef={allComments.length === index + 1 ? ref : undefined} 
+                                            key={comment.id}
+                                            comment={comment}
+                                            onLikeToggle={() => handleLikeToggle(comment.id)}
+                                            onDelete={handleDelete}
+                                            onEdit={handleEdit}
+                                            onReply={handleReply}
+                                        />  
+                            
+                                ))
+                            ) : (
+                                <p className="text-gray-500">No comments yet.</p>
+                            )}
 
-                        {comments && comments?.data.map((comment) => (
-                            <Comment
-                                key={comment.id}
-                                comment={comment}
-                                onLikeToggle={() => handleLikeToggle(comment.id)}
-                                onDelete={handleDelete}
-                                onEdit={handleEdit}
-                                onReply={handleReply}
-                            />
-                        ))}
+                            {isFetchingNextPage ? "Loading..." : ""}
+                                
+                        </div>
                     </div>
                 }
             </div>

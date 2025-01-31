@@ -6,6 +6,10 @@ import PostContent from "./PostContent";
 import CommentSection from "../comment/CommentSection";
 import { useCommentData } from "@/hooks/useCommentsData";
 import { useLikeMutation } from "@/hooks/useLikeMutation";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "@/utils/axios";
+import { CommentCollection } from "@/models/Models";
+import { useInfiniteComments } from "@/hooks/useInfiniteComments";
 
 export default function PostDetail() {
 
@@ -21,13 +25,9 @@ export default function PostDetail() {
     toggleLike(id);
   };
 
-  // Conditionally fetch comments only if post exists
-  const { data: comments, isLoading: isCommentLoading } = useCommentData(
-    'posts',
-    post?.id ? post.id : null, {
-    enabled: !!post?.id,
-  }
-  );
+  //infinite comments
+  const { data: infinite_comments, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading: isCommentsLoading } = useInfiniteComments("posts", post?.id);
+
 
   return (
     <div className="max-w-3xl mx-auto md:px-8 py-8 bg-white dark:bg-transparent">
@@ -53,7 +53,15 @@ export default function PostDetail() {
             </div>
 
           </div>
-          <CommentSection field="posts" current={post} comments={comments} isCommentLoading={isCommentLoading} />
+          <CommentSection
+            field="posts"
+            current={post}
+            comments={infinite_comments}
+            isCommentLoading={isCommentsLoading}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
           
         </div>
       )}

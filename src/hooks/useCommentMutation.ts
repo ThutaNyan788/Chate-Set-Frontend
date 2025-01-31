@@ -1,4 +1,4 @@
-import {  useMutation, useQueryClient } from "@tanstack/react-query";
+import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models";
 import { format } from 'date-fns';
@@ -28,47 +28,55 @@ export const useCommentMutation = (
       await queryClient.cancelQueries({ queryKey: cacheKey });
 
       // Backup previous comments
-      const previousComments = queryClient.getQueryData<CommentCollection>(cacheKey);
+      const previousComments = queryClient.getQueryData<InfiniteData<CommentCollection>>(cacheKey);
+
+      // Create the optimistic comment
+      const optimisticComment: CommentData = {
+        type: "comment",
+        id: Date.now(), // Temporary ID
+        attributes: {
+          id: Date.now(),
+          body: newComment.data.attributes.body,
+          user: {
+            id: 1, // Replace with authenticated user ID
+            name: "Your Name", // Replace with authenticated user name
+            profile_photo_path: null,
+          },
+          replies: [],
+          created_at: format(new Date(), "MMM dd, yyyy"),
+          updated_at: format(new Date(), "MMM dd, yyyy"),
+        },
+        relationships: {
+          likes: {
+            data: {
+              type: "likes",
+              attributes: {
+                count: 0,
+                liked: false,
+              },
+            },
+          },
+        },
+      };
 
       // Optimistically update comments
-      queryClient.setQueryData(cacheKey, (old: CommentCollection | undefined) => {
-        const mutatedComment: CommentData = {
-          type: "comment",
-          id: Date.now(), // Temporary ID
-          attributes: {
-            id: Date.now(),
-            body: newComment.data.attributes.body,
-            user: {
-              id: 1, // Replace with authenticated user ID
-              name: "Your Name", // Replace with authenticated user name
-              profile_photo_path: null,
-            },
-            replies: [],
-            created_at: format(new Date(), "MMM dd, yyyy"),
-            updated_at: format(new Date(), "MMM dd, yyyy"),
-          },
-          relationships: {
-            likes: {
-              data: {
-                  type: 'likes',
-                  attributes: {
-                    count: 0,
-                    liked: false,
-                }
-              }
-            }
-          }
+      queryClient.setQueryData(cacheKey, (old: InfiniteData<CommentCollection> | undefined) => {
+        if (!old) return old;
 
-        };
           return {
-            data: [mutatedComment, ...(old?.data || [])],
-            meta: {
-              ...old?.meta,
-              total_comments: (old?.meta?.total_comments || 0) + 1, // Increment total_comments
-              current_page: old?.meta?.current_page || 1,
-              per_page: old?.meta?.per_page || 10,
-              total_pages: old?.meta?.total_pages || 1,
-            },
+            ...old,
+            pages: old.pages.map((page, index) =>
+              index === 0 // Add only to the first page
+                ? {
+                    ...page,
+                    data: [optimisticComment, ...page.data],
+                    meta: {
+                      ...page.meta,
+                      total_comments: (page.meta.total_comments || 0) + 1,
+                    },
+                  }
+                : page
+            ),
           };
         });
 
@@ -84,9 +92,9 @@ export const useCommentMutation = (
 
     // Invalidate on Success
     onSettled: () => {
-      // queryClient.invalidateQueries({
-      //   queryKey: [field, id, "comments"],
-      // });
+      queryClient.invalidateQueries({
+        queryKey: [field, id, "comments"],
+      });
     },
   });
 };

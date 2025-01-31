@@ -19,13 +19,14 @@ import { CommentData } from "@/models/Models"
 
 interface CommentProps {
     comment: CommentData;
+    innerRef?:React.Ref<HTMLParagraphElement>
     onLikeToggle: (id: number) => void;
     onDelete?: (id: number) => void
     onEdit?: (id: number, newContent: string) => void
     onReply?: (id: number, content: string) => void
 }
 
-export function Comment({ comment, onLikeToggle, onDelete, onEdit, onReply }: CommentProps) {
+export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply }: CommentProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     
     const [isEditing, setIsEditing] = useState(false)
@@ -53,7 +54,7 @@ export function Comment({ comment, onLikeToggle, onDelete, onEdit, onReply }: Co
     }
 
     return (
-        <div className="group">
+        <div ref={innerRef} className="group">
             <div className=" border-[1.3px] dark:border-gray-800 rounded-lg p-4 transition-colors duration-200 hover:bg-muted/50">
                 <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">

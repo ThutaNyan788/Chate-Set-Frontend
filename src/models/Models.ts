@@ -12,6 +12,7 @@ export interface PostData {
     author: AuthorRelationship;
     likes: LikeRelationship;
     comments: CommentRelationship;
+    comments_count: number;
   };
   includes: {
     author: UserData;
@@ -48,6 +49,7 @@ export interface MetaData {
   current_page: number;
   per_page: number;
   total_pages: number;
+  next_page_url?: string | null;
 }
 
 // Interface for a single comment
