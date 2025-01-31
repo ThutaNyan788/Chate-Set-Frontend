@@ -39,13 +39,13 @@ const CommentSection: React.FC<CommentProps> = ({
     isFetchingNextPage,
 }) => {
 
-    const { ref, inView, entry } = useInView();
+    const { ref, inView } = useInView();
 
     useEffect(() => {
         if (inView && hasNextPage) {
             fetchNextPage();
         }
-    },[inView, hasNextPage]);
+    },[inView, hasNextPage,fetchNextPage]);
 
     const allComments = comments?.pages.flatMap((page) => page.data) || [];
     const totalComments = comments?.pages[0]?.meta.total_comments || 0;
@@ -158,27 +158,17 @@ const CommentSection: React.FC<CommentProps> = ({
                             {isCommentLoading ? (
                                 <p>Loading comments...</p>
                             ) : allComments.length > 0 ? (
-                                allComments.map((comment,index) => (
-                                    allComments.length === index + 1 ? (
+                                    allComments.map((comment, index) => (
+                                    
                                         <Comment
-                                            innerRef={ref}
+                                            innerRef={allComments.length === index + 1 ? ref : undefined} 
                                             key={comment.id}
                                             comment={comment}
                                             onLikeToggle={() => handleLikeToggle(comment.id)}
                                             onDelete={handleDelete}
                                             onEdit={handleEdit}
                                             onReply={handleReply}
-                                        />
-                                    ) : (
-                                            <Comment
-                                                key={comment.id}
-                                                comment={comment}
-                                                onLikeToggle={() => handleLikeToggle(comment.id)}
-                                                onDelete={handleDelete}
-                                                onEdit={handleEdit}
-                                                onReply={handleReply}
-                                            />
-                                    )
+                                        />  
                             
                                 ))
                             ) : (
