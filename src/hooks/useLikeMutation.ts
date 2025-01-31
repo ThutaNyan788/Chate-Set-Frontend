@@ -1,4 +1,4 @@
-import {  useMutation, useQueryClient } from "@tanstack/react-query";
+import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
 import { CommentCollection, PostCollection, PostData } from "@/models/Models";
 
@@ -22,36 +22,36 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
     onMutate: async (id: number) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: cacheKey });
-
       const previousData = queryClient.getQueryData(cacheKey);
 
-      queryClient.setQueryData(cacheKey, (oldData: any | undefined) => {
+      queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection|CommentCollection> | undefined) => {
         if (!oldData) return oldData;
         return {
           ...oldData,
-          data: oldData.data.map((item: any) =>
-            item.id === id
-              ? {
-                  ...item,
-                  relationships: {
-                    ...item.relationships,
-                    likes: {
-                      data: {
-                        type: "likes",
-                        attributes: {
-                          // Toggle `liked`
-                          liked: !item.relationships.likes?.data?.attributes?.liked,
-                          // Update `count`
-                          count: item.relationships.likes?.data?.attributes?.liked
-                            ? item.relationships.likes.data.attributes.count - 1
-                            : item.relationships.likes.data.attributes.count + 1,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            data: page.data.map((item) =>
+              item.id === id
+                ? {
+                    ...item,
+                    relationships: {
+                      ...item.relationships,
+                      likes: {
+                        data: {
+                          type: "likes",
+                          attributes: {
+                            liked: !item.relationships.likes?.data?.attributes?.liked,
+                            count: item.relationships.likes?.data?.attributes?.liked
+                              ? item.relationships.likes.data.attributes.count - 1
+                              : item.relationships.likes.data.attributes.count + 1,
+                          },
                         },
                       },
                     },
-                  },
-                }
-              : item
-          ),
+                  }
+                : item
+            ),
+          })),
         };
       });
 

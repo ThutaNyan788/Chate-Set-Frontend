@@ -180,7 +180,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle, onBookmarkToggl
 
 
                         <BookmarkButton isBookmarked={is_bookmarked} onBookmarkToggle={onBookmarkToggle} />
-                        <CopyLinkButton link={'http://localhost:5173/posts/' + post.id} />
+                        <CopyLinkButton link={'http://localhost:5173/posts/' + post.attributes.slug} />
                     </div>
                 </CardFooter>
             </Card>

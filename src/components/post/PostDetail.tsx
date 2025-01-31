@@ -6,6 +6,9 @@ import PostContent from "./PostContent";
 import CommentSection from "../comment/CommentSection";
 import { useCommentData } from "@/hooks/useCommentsData";
 import { useLikeMutation } from "@/hooks/useLikeMutation";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "@/utils/axios";
+import { CommentCollection } from "@/models/Models";
 
 export default function PostDetail() {
 
@@ -22,12 +25,57 @@ export default function PostDetail() {
   };
 
   // Conditionally fetch comments only if post exists
-  const { data: comments, isLoading: isCommentLoading } = useCommentData(
-    'posts',
-    post?.id ? post.id : null, {
-    enabled: !!post?.id,
-  }
-  );
+  // const { data: comments, isLoading: isCommentLoading } = useCommentData(
+  //   'posts',
+  //   post?.id ? post.id : null, {
+  //   enabled: !!post?.id,
+  // }
+  // );
+
+  //infinite comments
+  const field = 'posts';
+  const current = post;
+  const fetchComments = async ({
+    queryKey,
+    pageParam = 1,
+  }: {
+    queryKey: [string, number | null, string];
+    pageParam?: number;
+  }): Promise<CommentCollection> => {
+    const [, id] = queryKey; // Ignore `field` (already known)
+
+    if (!id) throw new Error("ID is required to fetch comments");
+
+    const response = await axios.get<CommentCollection>(
+      `/comments/${field}/${id}`,
+      {
+        params: { page: pageParam, per_page: 10 }, // Adjust `per_page` if needed
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
+  };
+
+  const {
+    data: infinite_comments,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isCommentsLoading,
+  } = useInfiniteQuery({
+    queryKey: [field, current?.id, 'comments'],
+    queryFn: ({ queryKey, pageParam }) => fetchComments({ queryKey: queryKey as [string, number | null, string], pageParam }),
+    enabled: !!current?.id,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { current_page, total_pages } = lastPage.meta;
+      return current_page < total_pages ? current_page + 1 : undefined;
+    },
+  });
+
 
   return (
     <div className="max-w-3xl mx-auto md:px-8 py-8 bg-white dark:bg-transparent">
@@ -53,7 +101,15 @@ export default function PostDetail() {
             </div>
 
           </div>
-          <CommentSection field="posts" current={post} comments={comments} isCommentLoading={isCommentLoading} />
+          <CommentSection
+            field="posts"
+            current={post}
+            comments={infinite_comments}
+            isCommentLoading={isCommentsLoading}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
           
         </div>
       )}
