@@ -29,3 +29,12 @@ export const useCommentData = (
         ...options, // Spread additional options
     });
 };
+
+
+  // Conditionally fetch comments only if post exists
+  // const { data: comments, isLoading: isCommentLoading } = useCommentData(
+  //   'posts',
+  //   post?.id ? post.id : null, {
+  //   enabled: !!post?.id,
+  // }
+  // );

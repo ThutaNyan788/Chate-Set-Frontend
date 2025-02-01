@@ -1,5 +1,6 @@
-import {  useMutation, useQueryClient } from "@tanstack/react-query";
+import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
+import { PostCollection, PostData } from "@/models/Models";
 
 const toggleBookmarkApi = (field: string, id: number) => {
     return axios.post(`/${field}/${id}/bookmark`, null, {
@@ -24,23 +25,33 @@ export const useBookmarkMutation = (field: string, cacheKey: any[]) => {
 
       const previousData = queryClient.getQueryData(cacheKey);
 
-      queryClient.setQueryData(cacheKey, (oldData: any | undefined) => {
+      queryClient.setQueryData(['posts'], (oldData: InfiniteData<PostCollection>) => {
         if (!oldData) return oldData;
-        return {
-          ...oldData,
-          data: oldData.data.map((item: any) =>
-            item.id === id
-              ? {
-                  ...item,
-                  attributes: {
-                    ...item.attributes,
-                    is_bookmarked: !item.attributes.is_bookmarked, // Toggle bookmark status
-                  },
-                }
-              : item
-          ),
-        };
+
+        // Update all pages
+        const updatedPages = oldData.pages.map((page) => {
+            return {
+                ...page,
+                data: page.data.map((item) =>
+                      item.id === id
+                          ? {
+                                ...item,
+                                attributes: {
+                                    ...item.attributes,
+                                    is_bookmarked: !item.attributes.is_bookmarked, // Toggle bookmark status
+                                },
+                            }
+                          : item
+                  ),
+              };
+          });
+
+          return {
+              ...oldData,
+              pages: updatedPages,
+          };
       });
+
 
       return { previousData };
     },
