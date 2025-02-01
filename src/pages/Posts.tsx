@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import PostCard from '@/components/post/PostCard';
-import { usePostsData } from '@/hooks/usePostsData';
+import { usePostsData } from '@/hooks/post/usePostsData';
 import PostSkeleton from '@/components/skeleton/PostSkeleton';
 import { useLikeMutation } from '@/hooks/useLikeMutation';
 import { useBookmarkMutation } from '@/hooks/useBookmarkMutation';
-import { useInfinitePosts } from '@/hooks/useInfinitePosts';
+import { useInfinitePosts } from '@/hooks/post/useInfinitePosts';
 import { useInView } from 'react-intersection-observer';
 
 
@@ -51,9 +51,7 @@ const Posts: React.FC = () => {
       }
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {isPostLoading ? (
-          <p>Loading comments...</p>
-        ) : allPosts.length > 0 ? (
+        { allPosts.length > 0 ? (
           allPosts.map((post, index) => {
             return (
                 
@@ -72,7 +70,7 @@ const Posts: React.FC = () => {
             );
           })
         ) : (
-          <p className="text-gray-500">No comments yet.</p>
+          <p className="text-gray-500">No posts yet.</p>
         )}
 
         {isFetchingNextPage ? "Loading..." : ""}

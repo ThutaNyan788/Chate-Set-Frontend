@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
 import { CommentData } from "@/models/Models"
+import { useEditCommentMutation } from "@/hooks/comment/useEditCommentMutation"
 
 interface CommentProps {
     comment: CommentData;
@@ -52,6 +53,14 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
         onReply?.(comment.id, content)
         setIsReplying(false)
     }
+
+    const getRepliesCount = (comment: CommentData): number => {
+        if (!comment.attributes.replies || comment.attributes.replies.length === 0) {
+            return 0;
+        }
+        return comment.attributes.replies.length + comment.attributes.replies.reduce((acc, reply) => acc + getRepliesCount(reply), 0);
+    };
+
 
     return (
         <div ref={innerRef} className="group">
@@ -110,7 +119,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                             </div>
                         ) : (
                             <>
-                                <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
+                                    <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
                                 <div className="mt-2 flex items-center space-x-4">
                                     <button
                                             onClick={()=>onLikeToggle(comment.id)}
@@ -174,7 +183,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                         onClick={toggleReplies}
                         className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                     >
-                        {isExpanded ? "Hide" : "Show"} {comment.attributes.replies.length} replies
+                        {isExpanded ? "Hide" : "Show"} {getRepliesCount(comment)} replies
                     </button>
                     {isExpanded && (
                         <div className="mt-2 space-y-4">

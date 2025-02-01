@@ -3,11 +3,13 @@
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models"
-import { useCommentMutation } from "@/hooks/useCommentMutation"
+import { useCommentMutation } from "@/hooks/comment/useCommentMutation"
 import { InfiniteData } from "@tanstack/react-query";
 import { useLikeMutation } from "@/hooks/useLikeMutation"
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react"
+import { useEditCommentMutation } from "@/hooks/comment/useEditCommentMutation"
+import { useDeleteCommentMutation } from "@/hooks/comment/useDeleteCommentMutation"
 
 
 interface CurrentData {
@@ -51,6 +53,8 @@ const CommentSection: React.FC<CommentProps> = ({
     const totalComments = comments?.pages[0]?.meta.total_comments || 0;
 
     const { mutate: addComment } = useCommentMutation(field, current.id);
+    const { mutate: editComment } = useEditCommentMutation(field, current.id);
+    const { mutate: deleteComment } = useDeleteCommentMutation(field,current.id);
 
     const { mutate: toggleLike } = useLikeMutation("comments", ["posts", current.id, "comments"]);
 
@@ -59,7 +63,7 @@ const CommentSection: React.FC<CommentProps> = ({
     };
 
     const handleAddComment = (content: string) => {
-        const commentPayload: CommentPayload = {
+        const payload: CommentPayload = {
             data: {
                 attributes: {
                     body: content
@@ -67,50 +71,23 @@ const CommentSection: React.FC<CommentProps> = ({
             }
         }
 
-        addComment(commentPayload);
+        addComment(payload);
     }
 
-    const handleEdit = (id: number, newContent: string) => {
-        const updateComment = (comments: CommentData[]): CommentData[] => {
-            return comments.map((comment) => {
-                if (comment.id === id) {
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            body: newContent,
-                            updated_at: new Date().toISOString(),
-                        },
-                    }
+
+    const handleEdit = (commentId: number, newContent: string) => {
+        const payload: CommentPayload = {
+            data: {
+                attributes: {
+                    body: newContent
                 }
-                if (comment.attributes.replies.length > 0) {
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            replies: updateComment(comment.attributes.replies),
-                        },
-                    }
-                }
-                return comment
-            })
+            }
         }
-        setComments(updateComment(comments))
+        editComment({commentId,payload});
     }
 
     const handleDelete = (id: number) => {
-        const deleteComment = (comments: CommentData[]): CommentData[] => {
-            return comments.filter((comment) => {
-                if (comment.id === id) {
-                    return false
-                }
-                if (comment.attributes.replies.length > 0) {
-                    comment.attributes.replies = deleteComment(comment.attributes.replies)
-                }
-                return true
-            })
-        }
-        setComments(deleteComment(comments))
+        deleteComment(id);
     }
 
     const handleReply = (parentId: number, content: string) => {
