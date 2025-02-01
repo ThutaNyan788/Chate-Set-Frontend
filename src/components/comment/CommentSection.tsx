@@ -150,7 +150,17 @@ const CommentSection: React.FC<CommentProps> = ({
                 <div className="space-y-4 mb-4">
                     <CommentInput onSubmit={handleAddComment} />
                 </div>
-                {isCommentLoading && <div>Loading comments...</div>}
+                {isCommentLoading && (
+                    <div className="space-y-4">
+                        <h2 className="text-2xl font-bold text-primary">
+                            <div className="animate-pulse rounded-md bg-gray-200 h-4 w-48"></div>
+                        </h2>
+
+                        {[1,2,3,4,5,6].map((comment) => (
+                            <div className="animate-pulse rounded-md bg-gray-200 h-28 w-full"></div>
+                        ))}
+                    </div>
+                )}
                 {!isCommentLoading &&
                     <div>
                         <h2 className="text-2xl font-bold text-primary mb-4">Discussion ({totalComments})</h2>
