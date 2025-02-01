@@ -6,6 +6,7 @@ import PostContent from "./PostContent";
 import CommentSection from "../comment/CommentSection";
 import { useCommentData } from "@/hooks/useCommentsData";
 import { useLikeMutation } from "@/hooks/useLikeMutation";
+import PostDetailSkeleton from "../skeleton/PostDetailSkeleton";
 
 export default function PostDetail() {
 
@@ -31,7 +32,7 @@ export default function PostDetail() {
 
   return (
     <div className="max-w-3xl mx-auto md:px-8 py-8 bg-white dark:bg-transparent">
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <PostDetailSkeleton/>}
       {error && <div>Error fetching post</div>}
       {post && (
         <div>
