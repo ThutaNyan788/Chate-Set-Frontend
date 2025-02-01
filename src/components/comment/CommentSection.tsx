@@ -3,7 +3,7 @@
 import { Comment } from "./Comment"
 import { CommentInput } from "./CommentInput"
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models"
-import { useCommentMutation } from "@/hooks/comment/useCommentMutation"
+import { useStoreCommentMutation } from "@/hooks/comment/useStoreCommentMutation"
 import { InfiniteData } from "@tanstack/react-query";
 import { useLikeMutation } from "@/hooks/useLikeMutation"
 import { useInView } from "react-intersection-observer";
@@ -52,7 +52,7 @@ const CommentSection: React.FC<CommentProps> = ({
     const allComments = comments?.pages.flatMap((page) => page.data) || [];
     const totalComments = comments?.pages[0]?.meta.total_comments || 0;
 
-    const { mutate: addComment } = useCommentMutation(field, current.id);
+    const { mutate: addComment } = useStoreCommentMutation(field, current.id);
     const { mutate: editComment } = useEditCommentMutation(field, current.id);
     const { mutate: deleteComment } = useDeleteCommentMutation(field,current.id);
 
@@ -151,7 +151,7 @@ const CommentSection: React.FC<CommentProps> = ({
                                             innerRef={allComments.length === index + 1 ? ref : undefined} 
                                             key={comment.id}
                                             comment={comment}
-                                            onLikeToggle={() => handleLikeToggle(comment.id)}
+                                            onLikeToggle={handleLikeToggle}
                                             onDelete={handleDelete}
                                             onEdit={handleEdit}
                                             onReply={handleReply}

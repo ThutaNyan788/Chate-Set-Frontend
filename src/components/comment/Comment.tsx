@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
 import { CommentData } from "@/models/Models"
-import { useEditCommentMutation } from "@/hooks/comment/useEditCommentMutation"
 
 interface CommentProps {
     comment: CommentData;
@@ -122,7 +121,9 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                                     <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
                                 <div className="mt-2 flex items-center space-x-4">
                                     <button
-                                            onClick={()=>onLikeToggle(comment.id)}
+                                        onClick={() => {
+                                            onLikeToggle(comment.id); 
+                                        }}
                                         className={`flex items-center space-x-1 text-sm transition-colors duration-200 ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                                             }`}
                                     >
@@ -188,7 +189,14 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                     {isExpanded && (
                         <div className="mt-2 space-y-4">
                             {comment.attributes.replies.map((reply) => (
-                                <Comment key={reply.id} comment={reply} onDelete={onDelete} onEdit={onEdit} onReply={onReply} onLikeToggle={onLikeToggle} />
+                                <Comment
+                                    key={reply.id}
+                                    comment={reply}
+                                    onDelete={onDelete}
+                                    onEdit={onEdit}
+                                    onReply={onReply}
+                                    onLikeToggle={onLikeToggle}  
+                                />
                             ))}
                         </div>
                     )}

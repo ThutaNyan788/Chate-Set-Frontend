@@ -11,7 +11,7 @@ const storeComment = (field: string, id: number, payload: CommentPayload) => {
     })
 }
 
-export const useCommentMutation = (
+export const useStoreCommentMutation = (
   field: string, // Polymorphic type
   id: number // Polymorphic ID
 ) => {
