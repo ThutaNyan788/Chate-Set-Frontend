@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Compass, Bell, Newspaper, Atom, Library, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Compass, Bell, Newspaper, Atom,Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
 import brandIcon from '@/assets/chate-set.svg'
@@ -15,6 +15,9 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useAuth } from '@/hooks/useAuth'
+import SidebarLeft from '@/assets/svg/SidebarLeft'
+import SidebarRight from '@/assets/svg/SidebarRight'
+
 interface NavItem {
     icon: React.ElementType,
     label: string,
@@ -81,10 +84,11 @@ const AuthenticatedNav = () => {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-8 w-8 border-[1.5px] "
                             onClick={() => setIsCollapsed(!isCollapsed)}
                         >
-                            {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                            {isCollapsed ? <SidebarRight /> : <SidebarLeft />}
+                            
                         </Button>
                     </div>
                     <ScrollArea className="flex-grow py-4">
