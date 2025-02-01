@@ -4,9 +4,9 @@ import { usePostDetail } from "@/hooks/usePostDetail";
 import { useParams } from "react-router-dom";
 import PostContent from "./PostContent";
 import CommentSection from "../comment/CommentSection";
-import { useCommentData } from "@/hooks/useCommentsData";
 import { useLikeMutation } from "@/hooks/useLikeMutation";
 import PostDetailSkeleton from "../skeleton/PostDetailSkeleton";
+import { useInfiniteComments } from "@/hooks/useInfiniteComments";
 
 
 

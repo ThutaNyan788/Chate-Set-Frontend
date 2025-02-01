@@ -42,7 +42,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ isLiked, likesCount, onLikeTogg
                                 ease: "easeOut",
                             }}
                         >
-                            <div className="w-6 h-6 rounded-full bg-red-500/60" />
+                            <div className="w-6 h-6 rounded-full bg-red-500/30" />
                         </motion.div>
                     )}
                 </AnimatePresence>

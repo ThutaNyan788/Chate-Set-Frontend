@@ -179,7 +179,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                     {isExpanded && (
                         <div className="mt-2 space-y-4">
                             {comment.attributes.replies.map((reply) => (
-                                <Comment key={reply.id} comment={reply} onDelete={onDelete} onEdit={onEdit} onReply={onReply} />
+                                <Comment key={reply.id} comment={reply} onDelete={onDelete} onEdit={onEdit} onReply={onReply} onLikeToggle={onLikeToggle} />
                             ))}
                         </div>
                     )}
