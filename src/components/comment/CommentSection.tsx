@@ -1,13 +1,16 @@
 "use client"
 
-import { Comment } from "./Comment"
-import { CommentInput } from "./CommentInput"
-import { CommentCollection, CommentData, CommentPayload } from "@/models/Models"
-import { useCommentMutation } from "@/hooks/useCommentMutation"
+import { Comment } from "./components/Comment"
+import { CommentInput } from "./components/CommentInput"
+import { CommentCollection, CommentPayload } from "@/models/Models"
+import { useStoreComment } from "@/hooks/comment/useStoreComment"
 import { InfiniteData } from "@tanstack/react-query";
 import { useLikeMutation } from "@/hooks/useLikeMutation"
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react"
+import { useEditComment } from "@/hooks/comment/useEditComment"
+import { useDeleteComment } from "@/hooks/comment/useDeleteComment"
+import { useStoreReply } from "@/hooks/comment/useStoreReply"
 
 
 interface CurrentData {
@@ -45,12 +48,15 @@ const CommentSection: React.FC<CommentProps> = ({
         if (inView && hasNextPage) {
             fetchNextPage();
         }
-    },[inView, hasNextPage,fetchNextPage]);
+    }, [inView, hasNextPage, fetchNextPage]);
 
     const allComments = comments?.pages.flatMap((page) => page.data) || [];
     const totalComments = comments?.pages[0]?.meta.total_comments || 0;
 
-    const { mutate: addComment } = useCommentMutation(field, current.id);
+    const { mutate: addComment } = useStoreComment(field, current.id);
+    const { mutate: replyComment } = useStoreReply(field, current.id);
+    const { mutate: editComment } = useEditComment(field, current.id);
+    const { mutate: deleteComment } = useDeleteComment(field, current.id);
 
     const { mutate: toggleLike } = useLikeMutation("comments", ["posts", current.id, "comments"]);
 
@@ -59,7 +65,7 @@ const CommentSection: React.FC<CommentProps> = ({
     };
 
     const handleAddComment = (content: string) => {
-        const commentPayload: CommentPayload = {
+        const payload: CommentPayload = {
             data: {
                 attributes: {
                     body: content
@@ -67,83 +73,30 @@ const CommentSection: React.FC<CommentProps> = ({
             }
         }
 
-        addComment(commentPayload);
+        addComment(payload);
     }
 
-    const handleEdit = (id: number, newContent: string) => {
-        const updateComment = (comments: CommentData[]): CommentData[] => {
-            return comments.map((comment) => {
-                if (comment.id === id) {
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            body: newContent,
-                            updated_at: new Date().toISOString(),
-                        },
-                    }
+
+    const handleEdit = (commentId: number, newContent: string) => {
+        const payload: CommentPayload = {
+            data: {
+                attributes: {
+                    body: newContent
                 }
-                if (comment.attributes.replies.length > 0) {
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            replies: updateComment(comment.attributes.replies),
-                        },
-                    }
-                }
-                return comment
-            })
+            }
         }
-        setComments(updateComment(comments))
+        editComment({ commentId, payload });
     }
 
     const handleDelete = (id: number) => {
-        const deleteComment = (comments: CommentData[]): CommentData[] => {
-            return comments.filter((comment) => {
-                if (comment.id === id) {
-                    return false
-                }
-                if (comment.attributes.replies.length > 0) {
-                    comment.attributes.replies = deleteComment(comment.attributes.replies)
-                }
-                return true
-            })
-        }
-        setComments(deleteComment(comments))
+        deleteComment(id);
     }
 
-    const handleReply = (parentId: number, content: string) => {
-        const addReply = (comments: CommentData[]): CommentData[] => {
-            return comments.map((comment) => {
-                if (comment.id === parentId) {
-                    const newReply: CommentData = {
-
-                    }
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            replies: [...comment.attributes.replies, newReply],
-                        },
-                    }
-                }
-                if (comment.attributes.replies.length > 0) {
-                    return {
-                        ...comment,
-                        attributes: {
-                            ...comment.attributes,
-                            replies: addReply(comment.attributes.replies),
-                        },
-                    }
-                }
-                return comment
-            })
-        }
-        setComments(addReply(comments))
+    const handleReply = (payload: CommentPayload) => {
+        replyComment(payload);
     }
 
-    
+
     return (
         <div className="space-y-6 max-w-3xl mx-auto">
             <div>
@@ -156,7 +109,7 @@ const CommentSection: React.FC<CommentProps> = ({
                             <div className="animate-pulse rounded-md bg-gray-200 h-4 w-48"></div>
                         </h2>
 
-                        {[1,2,3,4,5,6].map((comment,index) => (
+                        {[1, 2, 3, 4, 5, 6].map((index) => (
                             <div key={index} className="animate-pulse rounded-md bg-gray-200 h-28 w-full"></div>
                         ))}
                     </div>
@@ -168,25 +121,26 @@ const CommentSection: React.FC<CommentProps> = ({
                             {isCommentLoading ? (
                                 <p>Loading comments...</p>
                             ) : allComments.length > 0 ? (
-                                    allComments.map((comment, index) => (
-                                    
-                                        <Comment
-                                            innerRef={allComments.length === index + 1 ? ref : undefined} 
-                                            key={comment.id}
-                                            comment={comment}
-                                            onLikeToggle={() => handleLikeToggle(comment.id)}
-                                            onDelete={handleDelete}
-                                            onEdit={handleEdit}
-                                            onReply={handleReply}
-                                        />  
-                            
+                                allComments.map((comment, index) => (
+
+                                    <Comment
+                                        innerRef={allComments.length === index + 1 ? ref : undefined}
+                                        key={comment.id}
+                                        comment={comment}
+                                        onLikeToggle={handleLikeToggle}
+                                        onDelete={handleDelete}
+                                        onEdit={handleEdit}
+                                        onReply={handleReply}
+                                        rootCommentId={comment.id}
+                                    />
+
                                 ))
                             ) : (
                                 <p className="text-gray-500">No comments yet.</p>
                             )}
 
                             {isFetchingNextPage ? "Loading..." : ""}
-                                
+
                         </div>
                     </div>
                 }

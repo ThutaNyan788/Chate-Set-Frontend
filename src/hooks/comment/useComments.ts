@@ -17,7 +17,7 @@ const fetchComments = async (field: string, id: number | null): Promise<CommentC
     return response.data;
 }
 
-export const useCommentData = (
+export const useComments = (
     field: string, // Polymorphic type
     id: number | null, // Polymorphic ID (nullable)
     options?: { enabled?: boolean } // Optional configuration

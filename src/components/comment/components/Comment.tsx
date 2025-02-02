@@ -15,18 +15,19 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
-import { CommentData } from "@/models/Models"
+import { CommentData, CommentPayload } from "@/models/Models"
 
 interface CommentProps {
     comment: CommentData;
-    innerRef?:React.Ref<HTMLParagraphElement>
+    innerRef?: React.Ref<HTMLParagraphElement>;
     onLikeToggle: (id: number) => void;
-    onDelete?: (id: number) => void
-    onEdit?: (id: number, newContent: string) => void
-    onReply?: (id: number, content: string) => void
+    onDelete?: (id: number) => void;
+    onEdit?: (id: number, newContent: string) => void;
+    onReply?: (payload: CommentPayload) => void;
+    rootCommentId: number;  // The root comment's ID (base_id)
 }
 
-export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply }: CommentProps) {
+export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply , rootCommentId }: CommentProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     
     const [isEditing, setIsEditing] = useState(false)
@@ -49,9 +50,26 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
     }
 
     const handleReply = (content: string) => {
-        onReply?.(comment.id, content)
+        const payload: CommentPayload = {
+            data: {
+                attributes: {
+                    body: content,
+                    base_id: rootCommentId, // base_id is the root comment's id
+                    parent_id: comment.id, // parent_id is the comment we are replying to
+                }
+            }
+        };
+        onReply?.(payload)
         setIsReplying(false)
     }
+
+    const getRepliesCount = (comment: CommentData): number => {
+        if (!comment.attributes.replies || comment.attributes.replies.length === 0) {
+            return 0;
+        }
+        return comment.attributes.replies.length + comment.attributes.replies.reduce((acc, reply) => acc + getRepliesCount(reply), 0);
+    };
+
 
     return (
         <div ref={innerRef} className="group">
@@ -110,10 +128,12 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                             </div>
                         ) : (
                             <>
-                                <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
+                                    <p className="mt-1 text-sm text-foreground">{comment.attributes.body}</p>
                                 <div className="mt-2 flex items-center space-x-4">
                                     <button
-                                            onClick={()=>onLikeToggle(comment.id)}
+                                        onClick={() => {
+                                            onLikeToggle(comment.id); 
+                                        }}
                                         className={`flex items-center space-x-1 text-sm transition-colors duration-200 ${isLiked ? "text-primary" : "text-muted-foreground hover:text-primary"
                                             }`}
                                     >
@@ -174,12 +194,20 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                         onClick={toggleReplies}
                         className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                     >
-                        {isExpanded ? "Hide" : "Show"} {comment.attributes.replies.length} replies
+                        {isExpanded ? "Hide" : "Show"} {getRepliesCount(comment)} replies
                     </button>
                     {isExpanded && (
                         <div className="mt-2 space-y-4">
                             {comment.attributes.replies.map((reply) => (
-                                <Comment key={reply.id} comment={reply} onDelete={onDelete} onEdit={onEdit} onReply={onReply} onLikeToggle={onLikeToggle} />
+                                <Comment
+                                    key={reply.id}
+                                    comment={reply}
+                                    onDelete={onDelete}
+                                    onEdit={onEdit}
+                                    onReply={onReply}
+                                    onLikeToggle={onLikeToggle} 
+                                    rootCommentId={rootCommentId}
+                                />
                             ))}
                         </div>
                     )}

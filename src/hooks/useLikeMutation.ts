@@ -1,6 +1,6 @@
 import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { CommentCollection, PostCollection, PostData } from "@/models/Models";
+import { CommentCollection, CommentData, PostCollection } from "@/models/Models";
 
 const toggleLikeApi = (field: string, id: number) => {
   return axios.post(`/${field}/${id}/like`, null, {
@@ -18,45 +18,65 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
   return useMutation({
     mutationFn: (id: number) => toggleLikeApi(field, id),
 
-    // Handle optimistic updates
-    onMutate: async (id: number) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({ queryKey: cacheKey });
-      const previousData = queryClient.getQueryData(cacheKey);
+   onMutate: async (id: number) => {
+    // Cancel ongoing queries to prevent them from overriding optimistic updates
+    await queryClient.cancelQueries({ queryKey: cacheKey });
 
-      queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection|CommentCollection> | undefined) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            data: page.data.map((item) =>
-              item.id === id
-                ? {
-                    ...item,
-                    relationships: {
-                      ...item.relationships,
-                      likes: {
-                        data: {
-                          type: "likes",
-                          attributes: {
-                            liked: !item.relationships.likes?.data?.attributes?.liked,
-                            count: item.relationships.likes?.data?.attributes?.liked
-                              ? item.relationships.likes.data.attributes.count - 1
-                              : item.relationships.likes.data.attributes.count + 1,
-                          },
-                        },
-                      },
-                    },
-                  }
-                : item
-            ),
-          })),
-        };
-      });
+    // Store the previous state in case of rollback
+    const previousData = queryClient.getQueryData(cacheKey);
 
-      return { previousData };
-    },
+    // Update the query cache optimistically
+    queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection | CommentCollection> | undefined) => {
+      if (!oldData) return oldData;
+
+      // Recursive function to update the item (for comments with replies)
+      const updateItem = (item: any, id: number): any => {
+        if (item.id === id) {
+          return {
+            ...item,
+            relationships: {
+              ...item.relationships,
+              likes: {
+                data: {
+                  type: "likes",
+                  attributes: {
+                    liked: !item.relationships.likes?.data?.attributes?.liked,
+                    count: item.relationships.likes?.data?.attributes?.liked
+                      ? item.relationships.likes.data.attributes.count - 1
+                      : item.relationships.likes.data.attributes.count + 1,
+                  },
+                },
+              },
+            },
+          };
+        }
+
+        // 🔥 If it's a comment and has replies, recursively update them
+        if (item.attributes?.replies?.length) {
+          // console.log(item.attributes.replies,id);
+          return {
+            ...item,
+            attributes: {
+              ...item.attributes,
+              replies: item.attributes.replies.map((reply:CommentData) => updateItem(reply, id)), // 🔥 Recursive update for replies
+            },
+          };
+        }
+
+        return item; // Return unchanged if it's a post or a comment without replies
+      };
+
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          data: page.data.map((item) => updateItem(item, id)), // 🔥 Apply the recursive update function
+        })),
+      };
+    });
+
+    return { previousData }; // Return previous state for rollback in case of failure
+  },
 
     // Rollback on error
     onError: (err, id, context) => {
