@@ -43,8 +43,8 @@ export const useStoreComment = (
             profile_photo_path: null,
           },
           replies: [],
-          created_at: format(new Date(), "MMM dd, yyyy"),
-          updated_at: format(new Date(), "MMM dd, yyyy"),
+          created_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+          updated_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         },
         relationships: {
           likes: {

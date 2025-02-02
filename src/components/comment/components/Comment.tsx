@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
 import { CommentData, CommentPayload } from "@/models/Models"
+import { formatDistanceToNow } from "date-fns"
 
 interface CommentProps {
     comment: CommentData;
@@ -25,9 +26,10 @@ interface CommentProps {
     onEdit?: (id: number, newContent: string) => void;
     onReply?: (payload: CommentPayload) => void;
     rootCommentId: number;  // The root comment's ID (base_id)
+    depth: number;
 }
 
-export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply , rootCommentId }: CommentProps) {
+export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply , rootCommentId , depth }: CommentProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     
     const [isEditing, setIsEditing] = useState(false)
@@ -50,6 +52,10 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
     }
 
     const handleReply = (content: string) => {
+        if (depth >= 3) {
+            alert("You can't reply to this comment anymore")
+            return
+        }
         const payload: CommentPayload = {
             data: {
                 attributes: {
@@ -59,6 +65,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                 }
             }
         };
+
         onReply?.(payload)
         setIsReplying(false)
     }
@@ -70,6 +77,10 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
         return comment.attributes.replies.length + comment.attributes.replies.reduce((acc, reply) => acc + getRepliesCount(reply), 0);
     };
 
+    const isEdited = (createdAt: string, updatedAt: string) => {
+        console.log(createdAt, updatedAt)
+        return createdAt !== updatedAt ? "(edited)" : ""
+    }
 
     return (
         <div ref={innerRef} className="group">
@@ -77,17 +88,17 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                 <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
                         <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium text-sm">
-                            {comment.attributes.user?.name?.[0] || "A"}
+                            {comment.attributes.user?.name?.[0] || "A"} 
                         </div>
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-foreground">
-                                {comment.attributes.user?.name || "Anonymous"}
+                                {comment.attributes.user?.name || "Anonymous"} | {comment.id}
                             </p>
                             <div className="flex items-center space-x-2">
                                 <span className="text-xs text-muted-foreground">
-                                    {comment.attributes.created_at}
+                                    {isEdited(comment.attributes.created_at, comment.attributes.updated_at)} {formatDistanceToNow(new Date(comment.attributes.created_at), { addSuffix: true })}
                                 </span>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -140,13 +151,17 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                                         <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
                                             <span>{likes_count}</span>
                                     </button>
-                                    <button
-                                        onClick={() => setIsReplying(!isReplying)}
-                                        className="flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                                    >
-                                        <MessageCircle className="h-4 w-4" />
-                                        <span>Reply</span>
-                                    </button>
+                                        {
+                                            depth < 3 && (
+                                                <button
+                                                    onClick={() => setIsReplying(true)}
+                                                    className="flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                                                >
+                                                    <MessageCircle className="h-4 w-4" />
+                                                    <span>Reply</span>
+                                                </button>
+                                            )
+                                    }
                                 </div>
                             </>
                         )}
@@ -194,7 +209,9 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                         onClick={toggleReplies}
                         className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
                     >
-                        {isExpanded ? "Hide" : "Show"} {getRepliesCount(comment)} replies
+                        {isExpanded ? "Hide" : "Show"} {
+                            getRepliesCount(comment)
+                        } replies
                     </button>
                     {isExpanded && (
                         <div className="mt-2 space-y-4">
@@ -207,6 +224,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                                     onReply={onReply}
                                     onLikeToggle={onLikeToggle} 
                                     rootCommentId={rootCommentId}
+                                    depth={depth + 1}
                                 />
                             ))}
                         </div>

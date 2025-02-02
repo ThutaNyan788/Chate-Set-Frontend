@@ -43,8 +43,8 @@ export const useStoreReply = (
                 profile_photo_path: null,
             },
             replies: [],
-            created_at: format(new Date(), "MMM dd, yyyy"),
-            updated_at: format(new Date(), "MMM dd, yyyy"),
+            created_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            updated_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
             },
             relationships: {
             likes: {
@@ -62,7 +62,6 @@ export const useStoreReply = (
 
         // Function to recursively update replies
       const addReplyRecursively = (comment: CommentData, newComment: CommentData): CommentData => {
-          console.log(comment.id, newComment.attributes.parent_id);
           if (comment.id === newComment.attributes.parent_id) {
               // Add the reply under the correct comment (the parent)
               return {
