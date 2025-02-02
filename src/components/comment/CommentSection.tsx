@@ -132,6 +132,7 @@ const CommentSection: React.FC<CommentProps> = ({
                                         onEdit={handleEdit}
                                         onReply={handleReply}
                                         rootCommentId={comment.id}
+                                        depth={1}
                                     />
 
                                 ))
