@@ -15,18 +15,19 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
-import { CommentData } from "@/models/Models"
+import { CommentData, CommentPayload } from "@/models/Models"
 
 interface CommentProps {
     comment: CommentData;
-    innerRef?:React.Ref<HTMLParagraphElement>
+    innerRef?: React.Ref<HTMLParagraphElement>;
     onLikeToggle: (id: number) => void;
-    onDelete?: (id: number) => void
-    onEdit?: (id: number, newContent: string) => void
-    onReply?: (id: number, content: string) => void
+    onDelete?: (id: number) => void;
+    onEdit?: (id: number, newContent: string) => void;
+    onReply?: (payload: CommentPayload) => void;
+    rootCommentId: number;  // The root comment's ID (base_id)
 }
 
-export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply }: CommentProps) {
+export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onReply , rootCommentId }: CommentProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     
     const [isEditing, setIsEditing] = useState(false)
@@ -49,7 +50,16 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
     }
 
     const handleReply = (content: string) => {
-        onReply?.(comment.id, content)
+        const payload: CommentPayload = {
+            data: {
+                attributes: {
+                    body: content,
+                    base_id: rootCommentId, // base_id is the root comment's id
+                    parent_id: comment.id, // parent_id is the comment we are replying to
+                }
+            }
+        };
+        onReply?.(payload)
         setIsReplying(false)
     }
 
@@ -195,7 +205,8 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                                     onDelete={onDelete}
                                     onEdit={onEdit}
                                     onReply={onReply}
-                                    onLikeToggle={onLikeToggle}  
+                                    onLikeToggle={onLikeToggle} 
+                                    rootCommentId={rootCommentId}
                                 />
                             ))}
                         </div>

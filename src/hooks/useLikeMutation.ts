@@ -1,6 +1,6 @@
 import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { CommentCollection, CommentData, PostCollection, PostData } from "@/models/Models";
+import { CommentCollection, CommentData, PostCollection } from "@/models/Models";
 
 const toggleLikeApi = (field: string, id: number) => {
   return axios.post(`/${field}/${id}/like`, null, {
@@ -29,7 +29,7 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
     queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection | CommentCollection> | undefined) => {
       if (!oldData) return oldData;
 
-      // 🔥 Recursive function to update the item (for comments with replies)
+      // Recursive function to update the item (for comments with replies)
       const updateItem = (item: any, id: number): any => {
         if (item.id === id) {
           return {

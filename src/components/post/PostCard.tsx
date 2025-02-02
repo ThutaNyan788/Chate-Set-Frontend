@@ -25,7 +25,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import Comments from "@/components/comment/Comments"
+import Comments from "@/components/comment/components/Comments"
 import { mockComments } from './../comment/mockData';
 import LikeButton from "../ui/LikeButton"
 import BookmarkButton from "../ui/BookmarkButton"
@@ -118,9 +118,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                     <h2 className="line-clamp-2 text-xl md:text-2xl font-bold text-black dark:text-[#00E5B5]">{data.title}</h2>
                     <div className="flex flex-wrap gap-2 overflow-hidden h-7">
                         {data.tags.map((tag, index) => (
-                            <Link to="/" key={`${tag}-${index}`}> 
+                            <Link to="/" key={`${tag}-${index}`}>
                                 <Badge
-                                    key={`${tag}-${index}`}  
+                                    key={`${tag}-${index}`}
                                     variant="secondary"
                                     className="bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-[#1A2333] text-gray-700 dark:text-gray-300"
                                 >
@@ -156,7 +156,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                             <Heart className={`mr-1 h-4 w-4 ${is_liked ? "fill-current text-red-500" : ""}`} />
                             <span className="text-xs md:text-sm">{likes_count}</span>
                         </Button> */}
-                        
+
 
                         {/* Dialog comments for later implementation */}
                         {/* <Dialog open={openComments} onOpenChange={setOpenComments}>

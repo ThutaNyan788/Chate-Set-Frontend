@@ -1,49 +1,42 @@
-import { CommentCollection, CommentData, CommentPayload } from "@/models/Models";
-import axios from "@/utils/axios";
+import { CommentCollection, } from '@/models/Models';
+import axios from '@/utils/axios';
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useEditCommentMutation = (field: string, id: number) => {
+export const useDeleteComment = (field: string, id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ commentId, payload }: { commentId: number; payload: CommentPayload }) =>
-      axios.patch(`/comments/${commentId}/update`, payload, {
+    mutationFn: (commentId: number) =>
+      axios.delete(`/comments/${commentId}/destroy`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }),
-
-    onMutate: async ({ commentId, payload }) => {
+    
+    onMutate: async (commentId) => {
         const cacheKey = [field, id, "comments"];
-
-        // Cancel any ongoing queries
         await queryClient.cancelQueries({ queryKey: cacheKey });
 
         // Get the previous state of comments
         const previousComments = queryClient.getQueryData<InfiniteData<CommentCollection>>(cacheKey);
 
-        // Optimistically update the comment and its replies (if any)
         queryClient.setQueryData(cacheKey, (old: InfiniteData<CommentCollection> | undefined) => {
             if (!old) return old;
 
-            // Recursive function to update the comment or reply
-            const updateComment = (comment: CommentData, commentId: number, body: string): any => {
+            // Recursive function to remove a comment or reply, including nested replies
+            const removeComment = (comment: any, commentId: number): any => {
             if (comment.id === commentId) {
-                return {
-                ...comment,
-                attributes: {
-                    ...comment.attributes,
-                    body, // Update the comment's body
-                },
-                };
+                return null; // Remove the comment or reply
             }
 
-            // If the comment has replies, recursively update them as well
+            // If the comment has replies, remove the matching reply recursively
             if (comment.attributes?.replies?.length) {
+                const updatedReplies = comment.attributes.replies
+                .map((reply: any) => removeComment(reply, commentId)) // Apply removeComment recursively
+                .filter((reply: any) => reply !== null); // Filter out deleted replies
+
                 return {
                 ...comment,
                 attributes: {
                     ...comment.attributes,
-                    replies: comment.attributes.replies.map((reply:CommentData) =>
-                    updateComment(reply, commentId, body) // Recursively update replies
-                    ),
+                    replies: updatedReplies, // Update the replies after deletion
                 },
                 };
             }
@@ -51,20 +44,24 @@ export const useEditCommentMutation = (field: string, id: number) => {
             return comment; // Return unchanged if not the comment or reply
             };
 
-            // Apply the recursive update to all comments and replies
+            // Apply the removal to all comments and replies (including nested ones)
             return {
             ...old,
             pages: old.pages.map((page) => ({
                 ...page,
-                data: page.data.map((comment) =>
-                updateComment(comment, commentId, payload.data.attributes.body)
-                ),
+                data: page.data
+                .map((comment) => removeComment(comment, commentId)) // Remove comment or reply recursively
+                .filter((comment) => comment !== null), // Filter out the null (deleted) comments
+                meta: {
+                ...page.meta,
+                total_comments: (page.meta.total_comments || 0) - 1,
+                },
             })),
             };
         });
 
         return { previousComments };
-        },
+    },
 
     onError: (error, _, context) => {
       if (context?.previousComments) {
