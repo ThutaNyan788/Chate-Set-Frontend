@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { CommentInput } from "./CommentInput"
 import { CommentData, CommentPayload } from "@/models/Models"
+import { formatDistanceToNow } from "date-fns"
 
 interface CommentProps {
     comment: CommentData;
@@ -76,6 +77,10 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
         return comment.attributes.replies.length + comment.attributes.replies.reduce((acc, reply) => acc + getRepliesCount(reply), 0);
     };
 
+    const isEdited = (createdAt: string, updatedAt: string) => {
+        console.log(createdAt, updatedAt)
+        return createdAt !== updatedAt ? "(edited)" : ""
+    }
 
     return (
         <div ref={innerRef} className="group">
@@ -93,7 +98,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                             </p>
                             <div className="flex items-center space-x-2">
                                 <span className="text-xs text-muted-foreground">
-                                    {comment.attributes.created_at}
+                                    {isEdited(comment.attributes.created_at, comment.attributes.updated_at)} {formatDistanceToNow(new Date(comment.attributes.created_at), { addSuffix: true })}
                                 </span>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>

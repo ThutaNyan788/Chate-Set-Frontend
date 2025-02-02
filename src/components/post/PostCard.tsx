@@ -3,8 +3,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { PostData } from "@/models/Models"
-import { Bookmark, Heart, MessageCircle } from 'lucide-react'
+import {  MessageCircle } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
+import { format } from 'date-fns';
 
 import { motion } from "framer-motion"
 import {
@@ -79,7 +80,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                             <div className="space-y-2">
                                 <h3 className="font-medium leading-none line-clamp-1">{author.name}</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    {data.read_time} m read • {data.created_at}
+                                    {data.read_time} m read • {format(data.created_at, "MMM dd, yyyy")}
                                 </p>
                             </div>
                         </div>

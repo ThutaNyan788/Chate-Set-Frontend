@@ -1,6 +1,7 @@
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models";
 import axios from "@/utils/axios";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from 'date-fns';
 
 export const useEditComment = (field: string, id: number) => {
   const queryClient = useQueryClient();
@@ -30,7 +31,8 @@ export const useEditComment = (field: string, id: number) => {
                 ...comment,
                 attributes: {
                     ...comment.attributes,
-                    body, // Update the comment's body
+                  body, // Update the comment's body
+                  updated_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'), // Update the updated_at timestamp
                 },
                 };
             }
