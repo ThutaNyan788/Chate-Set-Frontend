@@ -62,7 +62,6 @@ export const useStoreReply = (
 
         // Function to recursively update replies
       const addReplyRecursively = (comment: CommentData, newComment: CommentData): CommentData => {
-          console.log(comment.id, newComment.attributes.parent_id);
           if (comment.id === newComment.attributes.parent_id) {
               // Add the reply under the correct comment (the parent)
               return {

@@ -51,7 +51,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
     }
 
     const handleReply = (content: string) => {
-        if (depth === 3) {
+        if (depth >= 3) {
             alert("You can't reply to this comment anymore")
             return
         }
@@ -64,6 +64,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                 }
             }
         };
+
         onReply?.(payload)
         setIsReplying(false)
     }
@@ -82,13 +83,13 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                 <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
                         <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium text-sm">
-                            {comment.attributes.user?.name?.[0] || "A"}
+                            {comment.attributes.user?.name?.[0] || "A"} 
                         </div>
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-foreground">
-                                {comment.attributes.user?.name || "Anonymous"}
+                                {comment.attributes.user?.name || "Anonymous"} | {comment.id}
                             </p>
                             <div className="flex items-center space-x-2">
                                 <span className="text-xs text-muted-foreground">

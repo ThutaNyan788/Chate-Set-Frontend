@@ -64,8 +64,8 @@ export interface CommentData {
 export interface CommentAttributes {
       id: number;
       body: string;
-      base_id: number;
-      parent_id: number;
+      base_id?: number;
+      parent_id?: number;
       user: {
         id: number;
         name: string;
