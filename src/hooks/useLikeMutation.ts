@@ -1,6 +1,6 @@
 import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { CommentCollection, CommentData, PostCollection } from "@/models/Models";
+import { CommentCollection, CommentData, PostCollection, PostData } from "@/models/Models";
 
 const toggleLikeApi = (field: string, id: number) => {
   return axios.post(`/${field}/${id}/like`, null, {
@@ -30,7 +30,7 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
       if (!oldData) return oldData;
 
       // Recursive function to update the item (for comments with replies)
-      const updateItem = (item: any, id: number): any => {
+      const updateItem = (item: PostData | CommentData, id: number): any => {
         if (item.id === id) {
           return {
             ...item,
@@ -40,7 +40,7 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
                 data: {
                   type: "likes",
                   attributes: {
-                    liked: !item.relationships.likes?.data?.attributes?.liked,
+                    liked: item.relationships.likes?.data?.attributes?.liked ? 0 : 1,
                     count: item.relationships.likes?.data?.attributes?.liked
                       ? item.relationships.likes.data.attributes.count - 1
                       : item.relationships.likes.data.attributes.count + 1,
@@ -52,8 +52,7 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
         }
 
         // 🔥 If it's a comment and has replies, recursively update them
-        if (item.attributes?.replies?.length) {
-          // console.log(item.attributes.replies,id);
+        if ('replies' in item.attributes && item.attributes.replies.length) {
           return {
             ...item,
             attributes: {

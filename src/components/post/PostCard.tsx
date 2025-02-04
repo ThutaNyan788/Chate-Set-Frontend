@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { PostData } from "@/models/Models"
-import {  MessageCircle } from 'lucide-react'
+import {  Heart, MessageCircle } from 'lucide-react'
 import { Link, useNavigate } from "react-router-dom"
 import { format } from 'date-fns';
 
@@ -156,8 +156,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                         >
                             <Heart className={`mr-1 h-4 w-4 ${is_liked ? "fill-current text-red-500" : ""}`} />
                             <span className="text-xs md:text-sm">{likes_count}</span>
-                        </Button> */}
-
+                        </Button>
+ */}
 
                         {/* Dialog comments for later implementation */}
                         {/* <Dialog open={openComments} onOpenChange={setOpenComments}>

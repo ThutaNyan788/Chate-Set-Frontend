@@ -24,7 +24,7 @@ const Posts: React.FC = () => {
   const allPosts = posts?.pages.flatMap((page) => page.data) || [];
   
   // Use the custom hook for liking a post
-  const { mutate: toggleLike, error: likeError } = useLikeMutation('posts',['posts']);
+  const { mutate: toggleLike, error: likeError } = useLikeMutation('posts', ['posts']);
   const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation('posts', ['posts']);
   
   const handleLikeToggle = async (postId: number) => {

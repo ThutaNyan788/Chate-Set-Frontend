@@ -61,9 +61,9 @@ const TopNavbar = () => {
           placeholder={undefined}
         />
         <div className="flex gap-5">
-          <div className="hidden md:block">
+          {/* <div className="hidden md:block">
             <PostCreateButton />
-          </div>
+          </div> */}
           <ProfileDropdown />
         </div>
       </div>

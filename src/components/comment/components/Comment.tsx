@@ -78,7 +78,6 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
     };
 
     const isEdited = (createdAt: string, updatedAt: string) => {
-        console.log(createdAt, updatedAt)
         return createdAt !== updatedAt ? "(edited)" : ""
     }
 

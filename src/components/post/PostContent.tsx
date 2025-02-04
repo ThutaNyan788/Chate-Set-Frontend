@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
+import { format } from 'date-fns';
 
 interface PostContentProps {
     post: PostData;
@@ -30,11 +31,11 @@ const PostContent: React.FC<PostContentProps> = ({ post }) => {
                 <div className="flex items-center space-x-4">
                     <Avatar>
                         <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Author" />
-                        <AvatarFallback>{author.name}</AvatarFallback>
+                        <AvatarFallback>{author.name[0]}</AvatarFallback>
                     </Avatar>
                     <div>
                         <p className="font-semibold">{author.name}</p>
-                        <p className="text-sm text-gray-500">Published on {data.created_at} · {data.read_time} min read</p>
+                        <p className="text-sm text-gray-500">Published on {format(data.created_at, "MMM dd, yyyy")} · {data.read_time} min read</p>
                     </div>
                 </div>
             </header>
