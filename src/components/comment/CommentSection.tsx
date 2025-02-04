@@ -117,7 +117,7 @@ const CommentSection: React.FC<CommentProps> = ({
                 {!isCommentLoading &&
                     <div>
                         <h2 className="text-2xl font-bold text-primary mb-4">Discussion ({totalComments})</h2>
-                        <div className="space-y-4 max-h-[65vh] overflow-y-scroll">
+                        <div className="space-y-4 max-h-[65vh] overflow-y-auto">
                             {isCommentLoading ? (
                                 <p>Loading comments...</p>
                             ) : allComments.length > 0 ? (
