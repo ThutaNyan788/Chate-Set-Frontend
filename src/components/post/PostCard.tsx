@@ -30,6 +30,8 @@ import Comments from "@/components/comment/components/Comments"
 import { mockComments } from './../comment/mockData';
 import LikeButton from "../ui/LikeButton"
 import BookmarkButton from "../ui/BookmarkButton"
+import { useInfiniteComments } from "@/hooks/comment/useInfiniteComments"
+import CommentSection from "../comment/CommentSection"
 
 interface PostCardProps {
     post: PostData;
@@ -51,7 +53,18 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
     const comments_count = post.relationships.comments.data.attributes.count;
     const is_liked = post.relationships.likes.data.attributes.liked;
     const is_bookmarked = post.attributes.is_bookmarked;
-    // const [openComments, setOpenComments] = useState(false); // Dialog comments for later implementation
+    const [openComments, setOpenComments] = useState(false); // Dialog comments for later implementation
+
+    //fetch comments when comment modal is open
+    const {
+        data: infinite_comments,
+        fetchNextPage : fetchNextPageComments,
+        hasNextPage :  hasNextPageComments,
+        isFetchingNextPage : isFetchingNextPageComments,
+        isLoading: isCommentsLoading
+    } = useInfiniteComments("posts", post?.id, {
+        enabled: openComments, // ✅ Fetch only when modal is open
+    });
 
     const navigate = useNavigate();
     const handleNavigate = (e: React.MouseEvent) => {
@@ -160,7 +173,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
  */}
 
                         {/* Dialog comments for later implementation */}
-                        {/* <Dialog open={openComments} onOpenChange={setOpenComments}>
+                        <Dialog
+                            open={openComments}
+                            onOpenChange={setOpenComments}
+                            
+                        >
                             <DialogTrigger asChild>
                                 <Button
                                     variant="ghost"
@@ -168,31 +185,54 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                                     className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                                 >
                                     <MessageCircle className="mr-1 h-4 w-4" />
-                                    <span className="text-xs md:text-sm">3</span>
+                                    <span className="text-xs md:text-sm">{comments_count}</span>
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-[600px] w-[90vw]"
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                            >
+                            <DialogContent
+                                className="w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto my-auto p-4 sm:p-6 rounded-lg shadow-xl max-h-[90vh] overflow-hidden"
                                 onClick={(e) => e.stopPropagation()}
                                 aria-describedby={undefined}
-                                >
-                                <DialogHeader className="flex flex-row items-center justify-between">
-                                    <DialogTitle>Comments (3)</DialogTitle>
-                                </DialogHeader>
-                                  
-                                <ScrollArea className="mt-8 max-h-[60vh] w-full pr-4">
-                                    <Comments comments={mockComments} />
-                                </ScrollArea>
-                            </DialogContent>
-                        </Dialog> */}
+                            >
+                                
+                                    <DialogHeader className="flex flex-row items-center justify-between border-b pb-3">
+                                        <DialogTitle className="text-lg sm:text-xl font-semibold">
+                                            Comments ({comments_count})
+                                        </DialogTitle>
+                                    </DialogHeader>
 
-                        <Button
+                                    {/* Fetch comments only when modal is open */}
+                                    {openComments && (
+                                        <CommentSection
+                                            field="posts"
+                                            current={post}
+                                            comments={infinite_comments}
+                                            isCommentLoading={isCommentsLoading}
+                                            fetchNextPage={fetchNextPageComments}
+                                            hasNextPage={hasNextPageComments}
+                                            isFetchingNextPage={isFetchingNextPageComments}
+                                        />
+                                    )}
+                                
+                            </DialogContent>
+                        </motion.div>
+
+                        </Dialog>
+
+
+                        {/* <Button
                             variant="ghost"
                             size="sm"
                             className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                         >
                             <MessageCircle className="mr-1 h-4 w-4" />
                             <span className="text-xs md:text-sm">{comments_count}</span>
-                        </Button>
+                        </Button> */}
 
 
                         <BookmarkButton isBookmarked={is_bookmarked} onBookmarkToggle={onBookmarkToggle} />

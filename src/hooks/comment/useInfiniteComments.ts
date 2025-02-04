@@ -23,11 +23,16 @@ const fetchComments = async ({
   return response.data;
 };
 
-export const useInfiniteComments = (field: string, id?: number) => {
+export const useInfiniteComments = (
+  field: string,
+  id?: number,
+  options?: { enabled?: boolean },
+) => {
   return useInfiniteQuery({
     queryKey: [field, id, "comments"],
     queryFn: ({ pageParam }) => fetchComments({ field, id: id as number, pageParam }),
-    enabled: !!id,
+    enabled: !!id && options?.enabled !== false,
+    ...options,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const { current_page, total_pages } = lastPage.meta;

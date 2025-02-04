@@ -98,7 +98,7 @@ const CommentSection: React.FC<CommentProps> = ({
 
 
     return (
-        <div className="space-y-6 max-w-3xl mx-auto">
+        <div className="space-y-6">
             <div>
                 <div className="space-y-4 mb-4">
                     <CommentInput onSubmit={handleAddComment} />
