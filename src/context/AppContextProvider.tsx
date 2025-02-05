@@ -1,17 +1,49 @@
 // FILE: ./context/AppContextProvider.tsx
-import  { createContext, useContext, ReactNode, useState } from 'react';
-
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import axios from "@/utils/axios"
 
 
 const AppContext = createContext<any>(undefined);
 
+const getCurrentUser = async () => {
+  try {
+    const user = await axios.post(`/auth/me`, null, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    return user;
+
+  } catch (error:any) {
+    throw new Error(error);
+  }
+}
+
+
+
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [toggleModal,setToggleModal] = useState("");
+  const [toggleModal, setToggleModal] = useState("");
+  const token = localStorage.getItem('token');
+  let [user,setUser] = useState<any>({});
+
+  useEffect(() => {
+    getCurrentUser()
+    .then((res:any)=>{
+      setUser(res.data.user);
+      
+    })
+    .catch((err:any)=>{
+      setUser({});      
+    });
+  }, [token]);
+
   return (
-    <AppContext.Provider value={{ 
+    <AppContext.Provider value={{
       toggleModal,
-      setToggleModal
-     }}>
+      setToggleModal,
+      user
+    }}>
       {children}
     </AppContext.Provider>
   );

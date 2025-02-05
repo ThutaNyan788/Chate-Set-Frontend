@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { useState } from 'react'
 import axios from '@/utils/axios'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useGlobalContext } from '@/context/AppContextProvider'
 
 const ProfileDropdown = () => {
+    const {user} = useGlobalContext();
 
     const [isOpen, setIsOpen] = useState(false)
     const toggleDropdown = () => setIsOpen(!isOpen);
@@ -73,6 +75,7 @@ const ProfileDropdown = () => {
         <div>
             <div >
                 <div onClick={toggleDropdown} className="flex items-center gap-2">
+                    <p>{user.name}</p>
                     <Avatar className="cursor-pointer">
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                         <AvatarFallback>CN</AvatarFallback>
