@@ -4,7 +4,7 @@ import { usePostDetail } from "@/hooks/post/usePostDetail";
 import { useParams } from "react-router-dom";
 import PostContent from "./PostContent";
 import CommentSection from "../comment/CommentSection";
-import { useLikeMutation } from "@/hooks/useLikeMutation";
+import { useLikeMutation } from "@/hooks/comment/useCommentLikeMutation";
 import PostDetailSkeleton from "../skeleton/PostDetailSkeleton";
 import { useInfiniteComments } from "@/hooks/comment/useInfiniteComments";
 
@@ -18,19 +18,13 @@ export default function PostDetail() {
   // Fetch post data
   const { data: post, error, isLoading } = usePostDetail(slug || "");
 
-  const { mutate: toggleLike, error: likeError } = useLikeMutation("post", ["post", post?.attributes.slug]);
-
-  const handleLikeToggle = async (id: number) => {
-    toggleLike(id);
-  };
-
   //infinite comments
   const { data: infinite_comments, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading: isCommentsLoading } = useInfiniteComments("posts", post?.id);
 
 
   return (
     <div className="max-w-3xl mx-auto md:px-8 py-8 bg-white dark:bg-transparent">
-      {isLoading && <PostDetailSkeleton/>}
+      {isLoading && <PostDetailSkeleton />}
       {error && <div>Error fetching post</div>}
       {post && (
         <div>
@@ -52,6 +46,7 @@ export default function PostDetail() {
             </div>
 
           </div>
+
           <CommentSection
             field="posts"
             current={post}
@@ -61,7 +56,7 @@ export default function PostDetail() {
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
           />
-          
+
         </div>
       )}
 

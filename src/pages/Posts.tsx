@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import PostCard from '@/components/post/PostCard';
-import { usePostsData } from '@/hooks/post/usePostsData';
 import PostSkeleton from '@/components/skeleton/PostSkeleton';
-import { useLikeMutation } from '@/hooks/useLikeMutation';
 import { useBookmarkMutation } from '@/hooks/useBookmarkMutation';
 import { useInfinitePosts } from '@/hooks/post/useInfinitePosts';
 import { useInView } from 'react-intersection-observer';
+import { usePostLikeMutation } from '@/hooks/post/usePostLikeMutation';
 
 
 const Posts: React.FC = () => {
@@ -20,13 +19,13 @@ const Posts: React.FC = () => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  
+
   const allPosts = posts?.pages.flatMap((page) => page.data) || [];
-  
+
   // Use the custom hook for liking a post
-  const { mutate: toggleLike, error: likeError } = useLikeMutation('posts', ['posts']);
+  const { mutate: toggleLike, error: likeError } = usePostLikeMutation('posts', ['posts']);
   const { mutate: toggleBookmark, error: bookmarkError } = useBookmarkMutation('posts', ['posts']);
-  
+
   const handleLikeToggle = async (postId: number) => {
     toggleLike(postId);
   };
@@ -51,10 +50,10 @@ const Posts: React.FC = () => {
       }
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        { allPosts.length > 0 ? (
+        {allPosts.length > 0 ? (
           allPosts.map((post, index) => {
             return (
-                
+
               // <p key={post.id} ref={allPosts.length === index + 1 ? ref : undefined}  >{ post.id } | {post.attributes.title}</p>
               <PostCard
                 innerRef={allPosts.length === index + 1 ? ref : undefined}  // Only pass ref to the last item

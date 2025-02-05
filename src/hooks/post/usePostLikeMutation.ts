@@ -1,6 +1,6 @@
 import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/utils/axios";
-import { CommentCollection, CommentData, PostCollection, PostData } from "@/models/Models";
+import {  PostCollection, PostData } from "@/models/Models";
 
 const toggleLikeApi = (field: string, id: number) => {
   return axios.post(`/${field}/${id}/like`, null, {
@@ -12,7 +12,7 @@ const toggleLikeApi = (field: string, id: number) => {
 
 
 
-export const useLikeMutation = (field: string, cacheKey: any[]) => {
+export const usePostLikeMutation = (field: string, cacheKey: any[]) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -26,11 +26,11 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
     const previousData = queryClient.getQueryData(cacheKey);
 
     // Update the query cache optimistically
-    queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection | CommentCollection> | undefined) => {
+    queryClient.setQueryData(cacheKey, (oldData: InfiniteData<PostCollection > | undefined) => {
       if (!oldData) return oldData;
 
       // Recursive function to update the item (for comments with replies)
-      const updateItem = (item: PostData | CommentData, id: number): any => {
+      const updateItem = (item: PostData, id: number): any => {
         if (item.id === id) {
           return {
             ...item,
@@ -47,17 +47,6 @@ export const useLikeMutation = (field: string, cacheKey: any[]) => {
                   },
                 },
               },
-            },
-          };
-        }
-
-        // 🔥 If it's a comment and has replies, recursively update them
-        if ('replies' in item.attributes && item.attributes.replies.length) {
-          return {
-            ...item,
-            attributes: {
-              ...item.attributes,
-              replies: item.attributes.replies.map((reply:CommentData) => updateItem(reply, id)), // 🔥 Recursive update for replies
             },
           };
         }
