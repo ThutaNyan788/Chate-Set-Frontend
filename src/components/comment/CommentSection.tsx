@@ -106,11 +106,11 @@ const CommentSection: React.FC<CommentProps> = ({
                 {isCommentLoading && (
                     <div className="space-y-4">
                         <h2 className="text-2xl font-bold text-primary">
-                            <div className="animate-pulse rounded-md bg-gray-200 h-4 w-48"></div>
+                            <div className="animate-pulse dark:bg-gray-900 rounded-md bg-gray-200 h-4 w-48"></div>
                         </h2>
 
                         {[1, 2, 3, 4, 5, 6].map((index) => (
-                            <div key={index} className="animate-pulse rounded-md bg-gray-200 h-28 w-full"></div>
+                            <div key={index} className="animate-pulse dark:bg-gray-900 rounded-md bg-gray-200 h-28 w-full"></div>
                         ))}
                     </div>
                 )}
