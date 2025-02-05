@@ -10,12 +10,12 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AppContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <Router/>
-        <Toaster/>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
-      </QueryClientProvider>
-    </AppContextProvider>
+      <AppContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <Router />
+          <Toaster />
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
+        </QueryClientProvider>
+      </AppContextProvider>
   </StrictMode>,
 );
