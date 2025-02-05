@@ -93,7 +93,7 @@ export function Comment({ comment, innerRef, onLikeToggle, onDelete, onEdit, onR
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-foreground">
-                                {comment.attributes.user?.name || "Anonymous"}
+                               {comment.attributes.user?.name || "Anonymous"}
                             </p>
                             <div className="flex items-center space-x-2">
                                 <span className="text-xs text-muted-foreground">

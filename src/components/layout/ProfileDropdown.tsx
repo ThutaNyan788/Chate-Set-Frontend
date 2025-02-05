@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useGlobalContext } from '@/context/AppContextProvider'
 
 const ProfileDropdown = () => {
-    const {user} = useGlobalContext();
+    const { user } = useGlobalContext();
 
     const [isOpen, setIsOpen] = useState(false)
     const toggleDropdown = () => setIsOpen(!isOpen);

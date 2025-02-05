@@ -2,6 +2,7 @@ import {  InfiniteData, useMutation, useQueryClient } from "@tanstack/react-quer
 import axios from "@/utils/axios";
 import { CommentCollection, CommentData, CommentPayload } from "@/models/Models";
 import { format } from 'date-fns';
+import { useGlobalContext } from "@/context/AppContextProvider";
 
 const storeComment = (field: string, id: number, payload: CommentPayload) => {
     return axios.post(`/comments/${field}/${id}/store`, payload, {
@@ -15,6 +16,7 @@ export const useStoreComment = (
   field: string, // Polymorphic type
   id: number // Polymorphic ID
 ) => {
+  const { user } = useGlobalContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -38,9 +40,9 @@ export const useStoreComment = (
           id: Date.now(),
           body: newComment.data.attributes.body,
           user: {
-            id: 1, // Replace with authenticated user ID
-            name: "Your Name", // Replace with authenticated user name
-            profile_photo_path: null,
+            id: user.id, 
+            name: user.name, 
+            profile_photo_path: user.profile_photo_path,
           },
           replies: [],
           created_at: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),

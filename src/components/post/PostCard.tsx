@@ -195,7 +195,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                             >
                             <DialogContent
-                                className="w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto my-auto p-4 sm:p-6 rounded-lg shadow-xl max-h-[90vh] overflow-hidden"
+                                className="w-full dark:bg-gray-950 max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto my-auto p-4 sm:p-6 rounded-lg shadow-xl max-h-[90vh] overflow-hidden"
                                 onClick={(e) => e.stopPropagation()}
                                 aria-describedby={undefined}
                             >
