@@ -112,7 +112,7 @@ const ProfileDropdown = () => {
                             animate="show"
                         >
                             <motion.li variants={menuItemVariants}>
-                                <Button variant="ghost" className="w-full justify-start" onClick={() => console.log('Profile clicked')}>
+                                <Button onClickCapture={()=>navigate("/profile")} variant="ghost" className="w-full justify-start" onClick={() => console.log('Profile clicked')}>
                                     <User className="mr-2 h-4 w-4" />
                                     Profile
                                 </Button>
