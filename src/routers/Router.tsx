@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { PostCreate } from "@/pages/PostCreate";
+import ProfileSetting from "@/components/profile/profileSetting";
 
 
 const router = createBrowserRouter([
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
                         path: "/groups",
                         element: <Groups />
                     },
+                    {
+                        path:"/profile",
+                        element:<ProfileSetting/>
+                    }
                 ],
             },
             {
