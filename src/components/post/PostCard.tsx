@@ -72,6 +72,13 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
         navigate(`/posts/${data.slug}`);
     }
 
+    const [isLiked, setIsLiked] = useState(is_liked);
+
+    const handleLikeToggle = () => {
+        setIsLiked(!isLiked);
+        onLikeToggle();
+    }
+
     const getImageUrl = (thumbnail: string) => {
         if (thumbnail.startsWith('http')) {
             return thumbnail;
@@ -160,17 +167,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
                 </CardContent>
                 <CardFooter>
                     <div className="flex space-x-2 md:space-x-4 interactions">
-                        <LikeButton isLiked={is_liked} likesCount={likes_count} onLikeToggle={onLikeToggle} />
-                        {/* <Button
-                            onClick={() => onLikeToggle()}
+                        {/* <LikeButton isLiked={isLiked} likesCount={likes_count} onLikeToggle={handleLikeToggle} /> */}
+                        <Button
+                            onClick={() => handleLikeToggle()}
                             variant="ghost"
                             size="sm"
                             className="interaction text-gray-700 dark:text-gray-400 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 border-[1.3px] dark:border-gray-600 rounded-lg"
                         >
-                            <Heart className={`mr-1 h-4 w-4 ${is_liked ? "fill-current text-red-500" : ""}`} />
+                            <Heart className={`mr-1 h-4 w-4 ${isLiked ? "fill-current text-red-500" : ""}`} />
                             <span className="text-xs md:text-sm">{likes_count}</span>
                         </Button>
- */}
 
                         {/* Dialog comments for later implementation */}
                         <Dialog
