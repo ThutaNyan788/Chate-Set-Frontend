@@ -73,14 +73,21 @@ const PostCard: React.FC<PostCardProps> = ({ post, innerRef, onLikeToggle, onBoo
     }
 
     const [isLiked, setIsLiked] = useState(is_liked);
+    // const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
 
     const handleLikeToggle = () => {
         setIsLiked(!isLiked);
         onLikeToggle();
     }
 
+    // const handleBookmarkToggle = () => {
+    //     setIsBookmarked(!isBookmarked);
+    //     onBookmarkToggle();
+    // }
+
     const getImageUrl = (thumbnail: string) => {
-        if (thumbnail.startsWith('http')) {
+
+        if (thumbnail && thumbnail.startsWith('http')) {
             return thumbnail;
         }
         return import.meta.env.VITE_API_STORAGE_URL + thumbnail;
