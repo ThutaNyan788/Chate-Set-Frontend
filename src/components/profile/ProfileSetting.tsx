@@ -2,10 +2,14 @@
 import { useState } from 'react';
 import ProfileActivity from './ProfileActivity'
 import ProfilePosts from './ProfilePosts';
+import { useNavigate } from 'react-router-dom';
+import { useGlobalContext } from '@/context/AppContextProvider';
 
 const ProfileSetting = () => {
     let [activity, setActivity] = useState('activity');
     let [dataItem,setDataItem] = useState([]);
+    let navigate = useNavigate();
+    let {user}= useGlobalContext();
 
     // Fetch Data from API
 
@@ -17,7 +21,7 @@ const ProfileSetting = () => {
                     <div className=' text-center p-1'>
                         <img src="https://randomuser.me/api/portraits/men/89.jpg" alt="" width={100} height={100} />
                         <div className='mt-4'>
-                            <button className='bg-gray-700 text-white font-semibold text-sm px-4 py-2
+                            <button onClick={()=>navigate(`/profileEdit/${user.id}`)} className='bg-gray-700 text-white font-semibold text-sm px-4 py-2
                             hover:border hover:border-solid  hover:border-blue-500 transition duration-700 ease-out'>Edit</button>
                         </div>
                     </div>
