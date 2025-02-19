@@ -3,7 +3,7 @@ import LoginForm from "./components/auth/LoginForm";
 import RegisterForm from "./components/auth/RegisterForm";
 import { useGlobalContext } from "./context/AppContextProvider";
 import { AnimatePresence } from "framer-motion";
-
+import './echo';
 
 export default function App() {
   const { toggleModal,setToggleModal } = useGlobalContext();

@@ -18,7 +18,7 @@ const PostContent: React.FC<PostContentProps> = ({ post }) => {
     // const is_bookmarked = post.attributes.is_bookmarked;
 
     const getImageUrl = (thumbnail: string) => {
-        if (thumbnail.startsWith('http')) {
+        if (thumbnail && thumbnail.startsWith('http')) {
             return thumbnail;
         }
         return import.meta.env.VITE_API_STORAGE_URL + thumbnail;

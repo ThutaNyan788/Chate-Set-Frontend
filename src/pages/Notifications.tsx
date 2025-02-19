@@ -1,7 +1,14 @@
-import React from 'react'
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout'
+
 
 const Notifications = () => {
+    
+    useEffect(()=>{
+        Echo.join('online')
+        .here((users)=>{
+            console.log(users)
+        })
+    })
+
     return (
         <div className="container mx-auto">
             hello noti
