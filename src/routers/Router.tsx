@@ -1,6 +1,6 @@
 import App from "@/App";
 import SocialiteCallback from "@/components/auth/SocialiteCallback";
-import  PostDetail  from "@/components/post/PostDetail";
+import PostDetail from "@/components/post/PostDetail";
 import Explore from "@/pages/Explore";
 import Home from "@/pages/Home";
 import Notifications from "@/pages/Notifications";
@@ -13,7 +13,8 @@ import {
 } from "react-router-dom";
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
 import { PostCreate } from "@/pages/PostCreate";
-import ProfileSetting from "@/components/profile/profileSetting";
+import ProfileSetting from "@/components/profile/ProfileSetting";
+import ProfileEdit from "@/pages/ProfileEdit";
 
 
 const router = createBrowserRouter([
@@ -65,9 +66,14 @@ const router = createBrowserRouter([
                         element: <Groups />
                     },
                     {
-                        path:"/profile",
-                        element:<ProfileSetting/>
+                        path: "/profile",
+                        element: <ProfileSetting />,
+                    },
+                    {
+                        path: "/profile/edit",
+                        element: <ProfileEdit />
                     }
+
                 ],
             },
             {
