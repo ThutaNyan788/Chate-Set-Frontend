@@ -11,7 +11,7 @@ const ProfileSetting = () => {
     let navigate = useNavigate();
     let {user}= useGlobalContext();
 
-    // Fetch Data from API
+// Fetch Data from API
 
     return (
         <div className=''>
@@ -21,7 +21,7 @@ const ProfileSetting = () => {
                     <div className=' text-center p-1'>
                         <img src="https://randomuser.me/api/portraits/men/89.jpg" alt="" width={100} height={100} />
                         <div className='mt-4'>
-                            <button onClick={()=>navigate(`/profileEdit/${user.id}`)} className='bg-gray-700 text-white font-semibold text-sm px-4 py-2
+                            <button onClick={()=>navigate(`/profile/edit`)} className='bg-gray-700 text-white font-semibold text-sm px-4 py-2
                             hover:border hover:border-solid  hover:border-blue-500 transition duration-700 ease-out'>Edit</button>
                         </div>
                     </div>

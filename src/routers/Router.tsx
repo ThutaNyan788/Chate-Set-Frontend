@@ -70,7 +70,7 @@ const router = createBrowserRouter([
                         element: <ProfileSetting />,
                     },
                     {
-                        path: "/profileEdit/:userId",
+                        path: "/profile/edit",
                         element: <ProfileEdit />
                     }
 

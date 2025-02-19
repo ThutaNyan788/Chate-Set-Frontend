@@ -13,7 +13,7 @@ export default function ProfileEdit() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [avatar, setAvatar] = useState("/placeholder.svg?height=100&width=100")
-
+  const [imgPath,setImgPath] = useState("");
   let fetchUser = async () => {
     try {
       const user = await axios.post(`/auth/me`, null, {
@@ -52,10 +52,11 @@ export default function ProfileEdit() {
 
     try {
       
-      const response = await axios.patch(`/profile/edit`, {
+      const response = await axios.patch(`/profile/update`, {
         name,
         email,
         password,
+        profile_photo_path: imgPath
       },{
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -63,7 +64,6 @@ export default function ProfileEdit() {
       })
 
 
-      console.log(response)
     } catch (error: any) {
       console.error(error)
     }
@@ -71,7 +71,7 @@ export default function ProfileEdit() {
 
   }
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
@@ -82,7 +82,19 @@ export default function ProfileEdit() {
 
       const formData = new FormData();
       formData.append("photo", file); // Append file
-      formData.append("name", file.name); // Optional metadata
+    
+      let ImgPath = axios.post("/profile/upload", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    let data = await ImgPath;
+    
+    let path = data.data.path;
+
+    setImgPath(path);
 
     }
   }
@@ -98,7 +110,7 @@ export default function ProfileEdit() {
         <CardTitle className="text-2xl font-bold text-center">Edit Profile</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
           <div className="flex justify-center">
             <div className="relative">
               <Avatar className="w-24 h-24">
