@@ -1,4 +1,5 @@
-import axios from "@/utils/axios";
+
+import axios from "axios";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
@@ -19,7 +20,7 @@ window.Echo = new Echo({
     return {
       authorize: (socketId: string, callback: (error: boolean, data: any) => void) => {
         axios
-          .post("/api/broadcasting/auth", {
+          .post("http://127.0.0.1:8000/api/broadcasting/auth", {
             socket_id: socketId,
             channel_name: channel.name,
           },{
