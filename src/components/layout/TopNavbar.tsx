@@ -8,6 +8,7 @@ import useLocalStorage from '@/hooks/useLocalStorage'
 import { useEffect, useState } from 'react'
 import ProfileDropdown from './ProfileDropdown'
 import { PostCreateButton } from '../post/PostCreateButton'
+import NotificationDropdown from './NotificationDropdown'
 
 
 const TopNavbar = () => {
@@ -50,7 +51,7 @@ const TopNavbar = () => {
     <div className="lg:px-8 flex md:w-full justify-between items-center px-5 py-3 shadow dark:shadow border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div className='flex md:hidden items-center gap-2'>
         <img src={brandIcon} alt="brand icon" width={50} height={50} />
-        <span>Chate Set</span>
+        <span className='hidden md:inline-block'>Chate Set</span>
       </div>
 
       <div className='md:w-full flex items-center gap-6 md:justify-between'>
@@ -64,6 +65,7 @@ const TopNavbar = () => {
           {/* <div className="hidden md:block">
             <PostCreateButton />
           </div> */}
+          <NotificationDropdown/> 
           <ProfileDropdown />
         </div>
       </div>
@@ -76,7 +78,7 @@ const TopNavbar = () => {
         className="flex items-center space-x-3 text-xl font-semibold"
       >
         <img src={brandIcon} alt="brand icon" width={50} height={50} />
-        <span>Chate Set</span>
+        <span className='hidden md:inline-block'>Chate Set</span>
       </button>
       <div className="flex items-center space-x-5">
         <Classic

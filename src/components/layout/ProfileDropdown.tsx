@@ -75,7 +75,7 @@ const ProfileDropdown = () => {
         <div>
             <div >
                 <div onClick={toggleDropdown} className="flex items-center gap-2">
-                    <p>{user.name}</p>
+                    <p className='hidden md:inline-block'>{user.name}</p>
                     <Avatar className="cursor-pointer">
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                         <AvatarFallback>CN</AvatarFallback>

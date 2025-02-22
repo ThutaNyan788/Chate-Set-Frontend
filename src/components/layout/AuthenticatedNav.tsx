@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Compass, Bell, Newspaper, Atom,Plus } from 'lucide-react'
+import { Compass, Bell, Newspaper, Atom,Plus, Library } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
 import brandIcon from '@/assets/chate-set.svg'
@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
     { icon: Newspaper, label: 'Posts', href: '/posts' },
     { icon: Compass, label: 'Explore', href: '/explore' },
     { icon: Plus, label: 'Create', href: '/posts/create' },
-    { icon: Bell, label: 'Notis', href: '/notifications' },
+    { icon: Library, label: 'My Library', href: '/my-library' },
     { icon: Atom, label: 'Groups', href: '/groups' },
 ]
 
